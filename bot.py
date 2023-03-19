@@ -1,8 +1,10 @@
 import discord
 from discord.ext import commands
 import json
+from threading import Thread
+import asyncio
 
-whotorun = "bot"
+whotorun = "beta"
 # beta / bot
 
 intents = discord.Intents.all()
@@ -23,6 +25,7 @@ bot = commands.Bot(command_prefix=prefix,
 #     EVENTS                     #
 import message_events.mock       #
 import message_events.wordle     #
+import message_events.cazino     #
 ##################################
 
  ####### #     #                #     # #######  #####   #####     #     #####  ####### 
@@ -53,6 +56,15 @@ async def on_message(message):
     await message_events.mock.reply3(message)
     await message_events.wordle.msg_wordle(message)
     await message_events.mock.wys(message)
+    await message_events.cazino.roulette_thr(message)
+
+###########
+# CAZINO
+###########
+
+@bot.command(brief = "Roulette")
+async def roulette(ctx):
+    asyncio.get_event_loop().create_task(message_events.cazino.roulette(ctx))
 
 #######################################################
 #   IDK                                               #
@@ -62,8 +74,8 @@ async def idk(ctx, *args):                            #
 #######################################################
 #   WORDLE                                            #
 @bot.command(brief = "Spanzuratoarea but in english") #
-async def wordle(ctx, *args):                                #
-    await message_events.wordle.wordle(ctx, *args)           #
+async def wordle(ctx, *args):                         #
+    await message_events.wordle.wordle(ctx, *args)    #
 #######################################################
 
 ###################################################################
