@@ -6,6 +6,7 @@ import time
 
 betted = {}
 bindedchannel = ""
+run = 0
 
 async def roulette_thr(message):
     if not message.author.id in betted and message.channel.id == bindedchannel:
@@ -18,18 +19,24 @@ async def roulette_thr(message):
     
 async def roulette(ctx):
     global bindedchannel
+    global run
     
-    await ctx.send("Place your bets folks! You have 60 seconds. [**red**/**black**]")
-    bindedchannel = ctx.channel.id
-    win = random.choice(["black", "red"])
-    await asyncio.sleep(60)
-    
-    winnersids = [k for k, v in betted.items() if v == win]
-    winners = []
-    for userid in winnersids:
-        winners.append(ctx.message.guild.get_member(userid).name)
-    win_message = f"Lucky colour: **{win}**\n**Winners:** {', '.join(winners) if len(winners)>0 else 'no winners'}"
-    await ctx.send(win_message)
-    betted.clear()
-    bindedchannel = ""
+    if run == 0:
+        run = 1
+        await ctx.send("Place your bets folks! You have 60 seconds. [**red**/**black**]")
+        bindedchannel = ctx.channel.id
+        win = random.choice(["black", "red"])
+        await asyncio.sleep(60)
+        
+        winnersids = [k for k, v in betted.items() if v == win]
+        winners = []
+        for userid in winnersids:
+            winners.append(ctx.message.guild.get_member(userid).name)
+        win_message = f"Lucky colour: **{win}**\n**Winners:** {', '.join(winners) if len(winners)>0 else 'no winners'}"
+        await ctx.send(win_message)
+        betted.clear()
+        bindedchannel = ""
+        run = 0
+    else:
+        await ctx.send("Game already commencing.")
     
