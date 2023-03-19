@@ -23,10 +23,15 @@ async def roulette(ctx):
     
     if run == 0:
         run = 1
-        await ctx.send("Place your bets folks! You have 60 seconds. [**red**/**black**]")
+        seclefts = 15
+        msg = await ctx.send(f"Place your bets folks! You have **{seclefts}** seconds. [**red**/**black**]")
         bindedchannel = ctx.channel.id
         win = random.choice(["black", "red"])
-        await asyncio.sleep(60)
+        for i in range(3):
+            await asyncio.sleep(5)
+            seclefts -= 5
+            await msg.edit(content=f"Place your bets folks! You have **{seclefts}** seconds. [**red**/**black**]")
+            
         
         winnersids = [k for k, v in betted.items() if v == win]
         winners = []
