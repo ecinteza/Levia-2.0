@@ -2,15 +2,22 @@ import discord
 from discord.ext import commands
 import json
 
+whotorun = "beta"
+# beta / bot
+
 intents = discord.Intents.all()
 intents.message_content = True
 intents.members = True
 
 prefix = '?'
+botactivity = "ur mom"
+if whotorun == "beta":
+    prefix = "."
+    botactivity = "ur dad"
 
 bot = commands.Bot(command_prefix=prefix,
                    intents=intents,
-                   activity=discord.Activity(type=discord.ActivityType.listening, name="ur mom"))
+                   activity=discord.Activity(type=discord.ActivityType.listening, name=botactivity))
 
 ##################################
 #     EVENTS                     #
@@ -45,6 +52,7 @@ async def on_message(message):
     await message_events.mock.mocking(message)
     await message_events.mock.reply3(message)
     await message_events.wordle.msg_wordle(message)
+    await message_events.mock.wys(message)
 
 #######################################################
 #   IDK                                               #
@@ -54,8 +62,8 @@ async def idk(ctx, *args):                            #
 #######################################################
 #   WORDLE                                            #
 @bot.command(brief = "Spanzuratoarea but in english") #
-async def wordle(ctx):                                #
-    await message_events.wordle.wordle(ctx)           #
+async def wordle(ctx, *args):                                #
+    await message_events.wordle.wordle(ctx, *args)           #
 #######################################################
 
 ###################################################################
@@ -70,7 +78,7 @@ async def wordle(ctx):                                #
 ###################################################################    
 @bot.command(brief = "Client Version")
 async def version(ctx):
-    await ctx.send("xLevia v2.0.3")
+    await ctx.send("xLevia v2.0.4")
 
 import commands.basics                                            
 @bot.command(brief = "Pong")                                      
@@ -130,9 +138,17 @@ async def penis(ctx):
 async def love(ctx, *args):
     await commands.fun.love(ctx, *args)
 
+@bot.command(brief = "see how much u hate someone")
+async def hate(ctx, *args):
+    await commands.fun.hate(ctx, *args)
+
 @bot.command(brief = "Search for words in the dictionary")
-async def dict(ctx, args):
-    await commands.fun.dict(ctx, args)
+async def dict(ctx, *args):
+    await commands.fun.dict(ctx, *args)
+    
+@bot.command(brief = "Search for words in the urban dictionary")
+async def urban(ctx, *args):
+    await commands.fun.urban(ctx, *args)
     
 @bot.command(brief = "Rock Paper & Scissors")
 async def rps(ctx, arg):
@@ -203,8 +219,8 @@ async def fm(ctx, *args):
 
 @bot.command(brief = "Mark the status of the ticket [ADMIN ONLY]")
 async def ticket(ctx, *args):
-    await commands.admin.ticket(ctx, *args)
+    await commands.admin.ticket(ctx, bot, *args)
     
 with open('TOKENS.json') as f:
         data = json.load(f)
-        bot.run(data["bot"])
+        bot.run(data[whotorun])

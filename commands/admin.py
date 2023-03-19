@@ -22,11 +22,10 @@ async def fm(ctx, bot, *args):
     except Exception as e:
         await ctx.send(f"Well, for some reason it did not work. ```{e}```")
         
-async def ticket(ctx, *args):
+async def ticket(ctx, bot, *args):
     if ctx.message.author.id != 255432828668477441:
         await ctx.send("You wish you could use this, don't u?")
         return
-    
     response = " ".join(args)
     if ctx.message.reference is not None:
         msg = await ctx.fetch_message(ctx.message.reference.message_id)
@@ -34,17 +33,27 @@ async def ticket(ctx, *args):
         date = str(datetime.now()).split(".")[0]
         
         if "fixed" in response.lower() or "implemented" in response.lower():
+            done = bot.get_channel(1087036132937715842)
             embed = discord.Embed(title = msg.embeds[0].title,
                           description = f"{msg.embeds[0].description}\n**{ctx.author.name}** at **{date}** `>>` **{response}**",
                           color = discord.Color.dark_green())
+            await ctx.message.delete()
+            await msg.delete()
+            await done.send(embed=embed)
+            return
         elif "approved" in response.lower():
             embed = discord.Embed(title = msg.embeds[0].title,
                           description = f"{msg.embeds[0].description}\n**{ctx.author.name}** at **{date}** `>>` **{response}**",
                           color = discord.Color.brand_green())
         elif "denied" in response.lower():
+            rejected = bot.get_channel(1087037594505838702)
             embed = discord.Embed(title = msg.embeds[0].title,
                           description = f"{msg.embeds[0].description}\n**{ctx.author.name}** at **{date}** `>>` **{response}**",
                           color = discord.Color.dark_red())
+            await ctx.message.delete()
+            await msg.delete()
+            await rejected.send(embed=embed)
+            return
         else:
             embed = discord.Embed(title = msg.embeds[0].title,
                           description = f"{msg.embeds[0].description}\n**{ctx.author.name}** at **{date}** `>>` **{response}**",

@@ -14,6 +14,7 @@ async def ping(ctx, bot):
     await ctx.send(f'My ping is {bot.latency}!')
     
 async def pfphex(ctx):
+    msg = await ctx.send("Loading...")
     if ctx.message.mentions:
         mentioned = ctx.message.mentions[0]
         
@@ -46,6 +47,7 @@ async def pfphex(ctx):
         await ctx.channel.send(embed=embed)
     
         os.remove(pic)
+    await msg.delete()
         
 async def poll(ctx, *args):
     if len(args)==0:
@@ -110,6 +112,7 @@ async def hex(ctx, *args):
         await ctx.send("Either I'm dumb (not likely) or you haven't used the command properly (most probably)")
 
 async def pfphexpal(ctx):
+    msg = await ctx.send("Loading...")
     if ctx.message.mentions:
         mentioned = ctx.message.mentions[0]
         
@@ -154,6 +157,7 @@ async def pfphexpal(ctx):
                 await ctx.send("Check <#719967026461802516>")
             
         os.remove(pic)
+    await msg.delete()
         
 async def avatar(ctx):
     img_url = ctx.message.author.avatar

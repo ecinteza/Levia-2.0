@@ -1,5 +1,7 @@
 import random
 from wordhoard import Definitions
+import requests
+import json
 
 async def penis(ctx):
     peen = "8"
@@ -8,15 +10,15 @@ async def penis(ctx):
         await ctx.send("Girlboss, we know you have no peen.", reference = ctx.message)
         return
     
-    bigchance = random.randint(0, 10000)
+    bigchance = random.randint(1, 100)
     
-    if bigchance == 0:
+    if bigchance == 1:
         random.randint(35, 40)
-    if bigchance >= 1 and bigchance <= 3:
+    if bigchance > 1 and bigchance <= 10:
         length = random.randint(30, 35)
-    elif bigchance >=4 and bigchance <= 200:
+    elif bigchance >10 and bigchance <= 30:
         length = random.randint(20, 29)
-    elif bigchance >= 210 and bigchance <= 500:
+    elif bigchance >30 and bigchance <= 60:
         length = random.randint(10, 19)
     else:
         length = random.randint(0, 9)
@@ -45,16 +47,30 @@ async def penis(ctx):
         peen = ""
     
     await ctx.send(mesaj + peen)
-    
+
+loveurself = [
+    "Do that in your bed, not in public",
+    "Wow, you're so narcissistic..."
+]
 async def love(ctx, *args):
-    if ctx.message.mentions:
+    if len(ctx.message.mentions) == 1:
         mentioned = ctx.message.mentions[0]
         if str(mentioned.id) != '413335791272460288':
-            love = random.randint(0, 100)
-            lovemsg = ctx.author.name + " & " + mentioned.name + " > " + str(love) + "% ❤️"
-            await ctx.channel.send(lovemsg)
+            if mentioned.id == ctx.author.id:
+                await ctx.channel.send(random.choice(loveurself), reference=ctx.message)
+            else:
+                love = random.randint(0, 100)
+                lovemsg = ctx.author.name + " & " + mentioned.name + " > " + str(love) + "% ❤️"
+                await ctx.channel.send(lovemsg)
         else:
             await ctx.channel.send("I only love k4tz losers.")
+    elif len(ctx.message.mentions) == 2:
+        mentioned = ctx.message.mentions[0]
+        mentioned_inlove = ctx.message.mentions[1]
+        
+        love = random.randint(0, 100)
+        lovemsg = mentioned.name + " & " + mentioned_inlove.name + " > " + str(love) + "% ❤️"
+        await ctx.channel.send(lovemsg)
     else:
         if len(args) > 0:
             arguments = " ".join(args)
@@ -64,15 +80,63 @@ async def love(ctx, *args):
         else:
             await ctx.channel.send("Are you that lonely?")
             
-async def dict(ctx, args):
+hateurself = [
+    "Wow, you should see a therapist...",
+    "Why would you hate yourself?"
+]
+async def hate(ctx, *args):
+    if len(ctx.message.mentions) == 1:
+        mentioned = ctx.message.mentions[0]
+        if str(mentioned.id) != '413335791272460288':
+            if mentioned.id == ctx.author.id:
+                await ctx.channel.send(random.choice(hateurself), reference=ctx.message)
+            else:
+                hate = random.randint(0, 100)
+                hatemsg = ctx.author.name + " & " + mentioned.name + " > " + str(hate) + "% 💔"
+                await ctx.channel.send(hatemsg)
+        else:
+            await ctx.channel.send("I hate you very much, yes.")
+    elif len(ctx.message.mentions) == 2:
+        mentioned = ctx.message.mentions[0]
+        mentioned_inhate = ctx.message.mentions[1]
+        
+        hate = random.randint(0, 100)
+        hatemsg = mentioned.name + " & " + mentioned_inhate.name + " > " + str(hate) + "% ❤️"
+        await ctx.channel.send(hatemsg)
+    else:
+        if len(args) > 0:
+            arguments = " ".join(args)
+            hate = random.randint(0, 100)
+            hatemsg = ctx.author.name + " & " + arguments + " > " + str(hate) + "% 💔"
+            await ctx.channel.send(hatemsg)
+        else:
+            await ctx.channel.send("Hm?")
+            
+async def dict(ctx, *args):
     try:
-        definition = Definitions(args)
+        search = " ".join(args)
+        definition = Definitions(search)
         defs = definition.find_definitions()
-        defs = str(defs).replace("[", "").replace("]", "").replace("'", "")
-        await ctx.send(defs)
+        defs = str(defs).replace("[", "").replace("]", "").replace("'", "").replace("'", "").replace("38;2;255;255;255m", "").replace("38;2;255;0;255m", "") #lazy
+        await ctx.send(defs, reference=ctx.message)
     except:
         await ctx.send("Are you this stupid that you can't use a command this simple?")
+
+def loadwordurban(term):
+    url = f"https://api.urbandictionary.com/v0/define?term={term}"
+    response = requests.get(url)
+    return response.text
+
+async def urban(ctx, *args):
+    try:
+        term = " ".join(args)
         
+        data = json.loads(loadwordurban(term))
+        msg = data["list"][0]['definition']
+        msg = msg.replace("[", "**[").replace("]", "]**")
+        await ctx.send(msg, reference=ctx.message)
+    except Exception as e:
+        await ctx.send(f"Error occured. ```{e}```")
         
 async def rps(ctx, arg):
     choices = ["rock", "paper", "scissors"]

@@ -48,43 +48,47 @@ async def msg_wordle(message):
                 guesstries[message.author.name] += 1
             
             if wordconstruct.lower() == correct_word:
-                await message.channel.send("Congratulations **" + message.author.name + "**! You have won the game! To start another game write the command again. ^^")
+                the_message = "**" + message.author.name + "** won! ^^" + '\n\n'
+
                 guesschannelbind = 0
                 guessrun = 0
                 guesshardcore = 0
                 
                 definition = Definitions(correct_word)
                 defs = definition.find_definitions()
-                defs = str(defs).replace("[", "").replace("]", "").replace("'", "")
-                await message.channel.send("Definition: **" + defs + "**")
+                defs = str(defs).replace("[", "").replace("]", "").replace("'", "").replace("38;2;255;255;255m", "").replace("38;2;255;0;255m", "") #lazy
+                the_message += "Definition: **" + defs + "**" + '\n\n'
                 
                 if len(guesstries)>0:
                     guesslb = ""
                     for user in guesstries.keys():
                         guesslb += "**" + user + "** tried **" + str(guesstries[user]) + "** times\n"
                     
-                    await message.channel.send("**Tries leaderboard:**\n\n" + guesslb)
+                    the_message += "**Tries leaderboard:**\n\n" + guesslb
+                    await message.channel.send(the_message)
                     guesstries.clear()
                 guesslist.clear()
                 guessusedletters.clear()
         else:
             if guess == correct_word:
-                await message.channel.send("Congratulations **" + message.author.name + "**! You have won the game! To start another game write the command again. ^^")
+                the_message = "**" + message.author.name + "** won! ^^" + '\n\n'
+
                 guesschannelbind = 0
                 guessrun = 0
                 guesshardcore = 0
                 
                 definition = Definitions(correct_word)
                 defs = definition.find_definitions()
-                defs = str(defs).replace("[", "").replace("]", "").replace("'", "")
-                await message.channel.send("Definition: **" + defs + "**")
+                defs = str(defs).replace("[", "").replace("]", "").replace("'", "").replace("38;2;255;255;255m", "").replace("38;2;255;0;255m", "") #lazy
+                the_message += "Definition: **" + defs + "**" + '\n\n'
                 
                 if len(guesstries)>0:
                     guesslb = ""
                     for user in guesstries.keys():
                         guesslb += "**" + user + "** tried **" + str(guesstries[user]) + "** times\n"
                     
-                    await message.channel.send("**Tries leaderboard:**\n\n" + guesslb)
+                    the_message += "**Tries leaderboard:**\n\n" + guesslb
+                    await message.channel.send(the_message)
                     guesstries.clear()
                 guesslist.clear()
                 guessusedletters.clear()
@@ -104,12 +108,30 @@ async def msg_wordle(message):
                     guesstries[message.author.name] += 1
         guess_current_user = "NULL"
         
-async def wordle(ctx):
+async def wordle(ctx, *args):
+    global guess_current_user
     global guesslist
     global guessrun
     global correct_word
     global guesschannelbind
     global guesshardcore
+    
+    reset = " ".join(args)
+    
+    if (reset == "reset" and ctx.author.id == 255432828668477441):
+        if guessrun == 1:
+            guesschannelbind = 0
+            guessrun = 0
+            guesshardcore = 0
+            guess_current_user = "NULL"
+            correct_word = ""
+            guesstries.clear()
+            guesslist.clear()
+            guessusedletters.clear()
+            await ctx.send("Admin has canceled the game.")
+        else:
+            await ctx.send("No game commencing")
+        return
     
     if guessrun == 0:
         guessrun = 1
