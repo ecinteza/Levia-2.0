@@ -47,7 +47,7 @@ async def roulette(ctx):
         for userid in bettednumber:
             if userid in winnercolour and userid in winnernumber:
                 winners.append(ctx.message.guild.get_member(userid).name)
-        win_message = f"Won: [{wininterval}-{wininterval+5}] **{wincolour}**\n**Winners:** {', '.join(winners) if len(winners)>0 else 'no winners'}"
+        win_message = f"Won: **[{wininterval}-{wininterval+5}] {wincolour}**\n**Winners:** {', '.join(winners) if len(winners)>0 else 'no winners'}"
         await ctx.send(win_message)
         bettedcolour.clear()
         bettednumber.clear()

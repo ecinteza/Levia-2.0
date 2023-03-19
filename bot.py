@@ -4,7 +4,7 @@ import json
 from threading import Thread
 import asyncio
 
-whotorun = "beta"
+whotorun = "bot"
 # beta / bot
 
 intents = discord.Intents.all()
