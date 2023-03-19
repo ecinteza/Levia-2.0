@@ -1,0 +1,55 @@
+import discord
+from datetime import datetime
+
+async def fm(ctx, bot, *args):
+    if ctx.message.author.id != 255432828668477441:
+        await ctx.send("You wish you could use this, don't u?")
+        return
+    try:
+        channel = bot.get_channel(int(args[0]))
+        messages = ""
+        i = 0
+        async for message in channel.history(limit=int(args[2])):
+            if message.author.id == int(args[1]):
+                messages += message.author.name + ": " + message.content + "\n"
+                if i==5:
+                    await ctx.channel.send(messages)
+                    messages=""
+                    i = 0
+                i += 1
+        if i != 0:
+            await ctx.channel.send(messages)
+    except Exception as e:
+        await ctx.send(f"Well, for some reason it did not work. ```{e}```")
+        
+async def ticket(ctx, *args):
+    if ctx.message.author.id != 255432828668477441:
+        await ctx.send("You wish you could use this, don't u?")
+        return
+    
+    response = " ".join(args)
+    if ctx.message.reference is not None:
+        msg = await ctx.fetch_message(ctx.message.reference.message_id)
+        
+        date = str(datetime.now()).split(".")[0]
+        
+        if "fixed" in response.lower() or "implemented" in response.lower():
+            embed = discord.Embed(title = msg.embeds[0].title,
+                          description = f"{msg.embeds[0].description}\n**{ctx.author.name}** at **{date}** `>>` **{response}**",
+                          color = discord.Color.dark_green())
+        elif "approved" in response.lower():
+            embed = discord.Embed(title = msg.embeds[0].title,
+                          description = f"{msg.embeds[0].description}\n**{ctx.author.name}** at **{date}** `>>` **{response}**",
+                          color = discord.Color.brand_green())
+        elif "denied" in response.lower():
+            embed = discord.Embed(title = msg.embeds[0].title,
+                          description = f"{msg.embeds[0].description}\n**{ctx.author.name}** at **{date}** `>>` **{response}**",
+                          color = discord.Color.dark_red())
+        else:
+            embed = discord.Embed(title = msg.embeds[0].title,
+                          description = f"{msg.embeds[0].description}\n**{ctx.author.name}** at **{date}** `>>` **{response}**",
+                          color = discord.Color.dark_gold())
+        
+        await ctx.message.delete()
+        await msg.delete()
+        await ctx.send(embed=embed)
