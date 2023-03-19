@@ -97,7 +97,7 @@ async def wordle(ctx, *args):                         #
 ###################################################################    
 @bot.command(brief = "Client Version")
 async def version(ctx):
-    await ctx.send("xLevia v2.0.4")
+    await ctx.send("xLevia v2.1")
 
 import commands.basics                                            
 @bot.command(brief = "Pong")                                      
