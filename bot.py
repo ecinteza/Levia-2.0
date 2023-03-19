@@ -4,7 +4,7 @@ import json
 from threading import Thread
 import asyncio
 
-whotorun = "beta"
+whotorun = "bot"
 # beta / bot
 
 intents = discord.Intents.all()
@@ -13,6 +13,7 @@ intents.members = True
 
 prefix = '?'
 botactivity = "ur mom"
+
 if whotorun == "beta":
     prefix = "."
     botactivity = "ur dad"
@@ -65,6 +66,12 @@ async def on_message(message):
 @bot.command(brief = "Roulette")
 async def roulette(ctx):
     asyncio.get_event_loop().create_task(message_events.cazino.roulette(ctx))
+    
+import commands.gambling
+
+@bot.command(brief = "Slots")
+async def slots(ctx):
+    await commands.gambling.slots(ctx)
 
 #######################################################
 #   IDK                                               #
