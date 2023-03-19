@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import json
 
-whotorun = "beta"
+whotorun = "bot"
 # beta / bot
 
 intents = discord.Intents.all()
