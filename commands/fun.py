@@ -101,7 +101,7 @@ async def hate(ctx, *args):
         mentioned_inhate = ctx.message.mentions[1]
         
         hate = random.randint(0, 100)
-        hatemsg = mentioned.name + " & " + mentioned_inhate.name + " > " + str(hate) + "% ❤️"
+        hatemsg = mentioned.name + " & " + mentioned_inhate.name + " > " + str(hate) + "% 💔"
         await ctx.channel.send(hatemsg)
     else:
         if len(args) > 0:
