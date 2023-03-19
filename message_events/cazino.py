@@ -4,18 +4,23 @@ import random
 import time
 # 18 RED, 18 BLACK
 
-betted = {}
+bettedcolour = {}
+bettednumber = {}
 bindedchannel = ""
 run = 0
 
 async def roulette_thr(message):
-    if not message.author.id in betted and message.channel.id == bindedchannel:
-        if (message.content.lower() == "red"):
-            betted[message.author.id] = "red"
-            await message.channel.send("**" + message.author.name + "** bet placed on red.")
-        elif (message.content.lower() == "black"):
-            betted[message.author.id] = "black"
-            await message.channel.send("**" + message.author.name + "** bet placed on black.")
+    if not message.author.id in bettedcolour and message.channel.id == bindedchannel:
+        try:
+            args = message.content.lower().split(" ")
+            if args[0] == "bet":
+                number = args[1]
+                colour = args[2]
+                bettednumber[message.author.id] = int(number)
+                bettedcolour[message.author.id] = colour
+                await message.channel.send(f"**{message.author.name}** placed on **{number} {colour}**")
+        except Exception as e:
+            await message.channel.send(f"Error occured```{e}```")
     
 async def roulette(ctx):
     global bindedchannel
@@ -24,22 +29,28 @@ async def roulette(ctx):
     if run == 0:
         run = 1
         seclefts = 15
-        msg = await ctx.send(f"Place your bets folks! You have **{seclefts}** seconds. [**red**/**black**]")
+        msg = await ctx.send(f"Place your bets folks! You have **{seclefts}** seconds.\n`bet [1-36] [red/black]`")
         bindedchannel = ctx.channel.id
-        win = random.choice(["black", "red"])
+        
+        wincolour = random.choice(["black", "red"])
+        wininterval = random.randint(1, 31)
+        
         for i in range(3):
             await asyncio.sleep(5)
             seclefts -= 5
-            await msg.edit(content=f"Place your bets folks! You have **{seclefts}** seconds. [**red**/**black**]")
+            await msg.edit(content=f"Place your bets folks! You have **{seclefts}** seconds.")
             
         
-        winnersids = [k for k, v in betted.items() if v == win]
+        winnercolour = [k for k, v in bettedcolour.items() if v == wincolour]
+        winnernumber = [k for k, v in bettednumber.items() if v >= wininterval and v<=wininterval+5]
         winners = []
-        for userid in winnersids:
-            winners.append(ctx.message.guild.get_member(userid).name)
-        win_message = f"Lucky colour: **{win}**\n**Winners:** {', '.join(winners) if len(winners)>0 else 'no winners'}"
+        for userid in bettednumber:
+            if userid in winnercolour and userid in winnernumber:
+                winners.append(ctx.message.guild.get_member(userid).name)
+        win_message = f"Won: [{wininterval}-{wininterval+5}] **{wincolour}**\n**Winners:** {', '.join(winners) if len(winners)>0 else 'no winners'}"
         await ctx.send(win_message)
-        betted.clear()
+        bettedcolour.clear()
+        bettednumber.clear()
         bindedchannel = ""
         run = 0
     else:
