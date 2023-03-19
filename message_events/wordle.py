@@ -107,7 +107,12 @@ async def msg_wordle(message):
                 else:
                     guesstries[message.author.name] += 1
         guess_current_user = "NULL"
-        
+
+wordleAdmins = [
+    255432828668477441,
+    246213412059611136
+    ]
+
 async def wordle(ctx, *args):
     global guess_current_user
     global guesslist
@@ -118,7 +123,7 @@ async def wordle(ctx, *args):
     
     reset = " ".join(args)
     
-    if (reset == "reset" and ctx.author.id == 255432828668477441):
+    if (reset == "reset" and ctx.author.id in wordleAdmins):
         if guessrun == 1:
             guesschannelbind = 0
             guessrun = 0
