@@ -134,32 +134,35 @@ async def wordle(ctx, *args):
         return
     
     if guessrun == 0:
-        guessrun = 1
+        try:
+            guessrun = 1
         
-        word_site = "https://www.mit.edu/~ecprice/wordlist.10000"
+            word_site = "https://www.mit.edu/~ecprice/wordlist.10000"
 
-        response = requests.get(word_site)
-        WORDS = response.content.splitlines()
-        correct_word = random.choice(WORDS)
-        correct_word = correct_word.decode('UTF-8')
-        
-        if "hardcore" in ctx.message.content.lower():
-            while(len(correct_word)<10):
-                correct_word = random.choice(WORDS)
-                correct_word = correct_word.decode('UTF-8')
-            guesshardcore = 1
-    
-        for letter in correct_word:
-            guesslist[letter] = "-"
+            response = requests.get(word_site)
+            WORDS = response.content.splitlines()
+            correct_word = random.choice(WORDS)
+            correct_word = correct_word.decode('UTF-8')
             
-        wordconstruct = ""
-        for letter in list(correct_word):
-            wordconstruct += guesslist[letter]
-        wordconstruct = wordconstruct.capitalize()
+            if "hardcore" in ctx.message.content.lower():
+                while(len(correct_word)<10):
+                    correct_word = random.choice(WORDS)
+                    correct_word = correct_word.decode('UTF-8')
+                guesshardcore = 1
         
-        await ctx.send("Game started and binded in <#" + str(ctx.channel.id) + ">.")
-        await ctx.send("Word: **" + wordconstruct + "**\nLetters: **" + str(len(wordconstruct)) + "**")
-        
-        guesschannelbind = ctx.channel.id
+            for letter in correct_word:
+                guesslist[letter] = "-"
+                
+            wordconstruct = ""
+            for letter in list(correct_word):
+                wordconstruct += guesslist[letter]
+            wordconstruct = wordconstruct.capitalize()
+            
+            await ctx.send("Game started and binded in <#" + str(ctx.channel.id) + ">.")
+            await ctx.send("Word: **" + wordconstruct + "**\nLetters: **" + str(len(wordconstruct)) + "**")
+            
+            guesschannelbind = ctx.channel.id
+        except Exception as e:
+            await ctx.send(f"Error occured.```{e}```")
     else:
         await ctx.send("Game commencing in <#" + str(guesschannelbind) + ">!")
