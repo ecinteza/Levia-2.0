@@ -136,8 +136,12 @@ async def wordle(ctx, *args):
     if guessrun == 0:
         try:
             guessrun = 1
-        
-            word_site = "https://www.mit.edu/~ecprice/wordlist.10000"
+            sites = [
+                "https://raw.githubusercontent.com/mahsu/IndexingExercise/master/5000-words.txt",
+                "https://www.mit.edu/~ecprice/wordlist.10000",
+                "https://gist.githubusercontent.com/deekayen/4148741/raw/98d35708fa344717d8eee15d11987de6c8e26d7d/1-1000.txt"
+            ]
+            word_site = random.choice(sites)
 
             response = requests.get(word_site)
             WORDS = response.content.splitlines()
