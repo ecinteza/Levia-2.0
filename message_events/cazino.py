@@ -19,6 +19,7 @@ async def roulette_thr(message):
                 bettednumber[message.author.id] = int(number)
                 bettedcolour[message.author.id] = colour
                 await message.channel.send(f"**{message.author.name}** placed on **{number} {colour}**")
+                await message.delete()
         except Exception as e:
             await message.channel.send(f"Error occured```{e}```")
     

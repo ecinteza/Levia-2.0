@@ -132,7 +132,7 @@ async def urban(ctx, *args):
         term = " ".join(args)
         
         data = json.loads(loadwordurban(term))
-        msg = data["list"][0]['definition']
+        msg = data["list"][random.randint(0, len(data["list"])-1)]['definition']
         msg = msg.replace("[", "**[").replace("]", "]**")
         await ctx.send(msg, reference=ctx.message)
     except Exception as e:
