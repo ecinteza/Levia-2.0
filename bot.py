@@ -4,6 +4,7 @@ import json
 from threading import Thread
 import asyncio
 
+# RUN RUN RUN RUN RUN
 whotorun = "bot"
 # beta / bot
 

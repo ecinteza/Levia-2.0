@@ -12,6 +12,12 @@ correct_word = "NULL"
 guesschannelbind = 0
 guesshardcore = 0
 
+def checkword(strin):
+    for letter in strin:
+        if not letter.isalpha():
+            return 0
+    return 1
+
 async def msg_wordle(message):
     global guesslist
     global guessrun
@@ -23,7 +29,7 @@ async def msg_wordle(message):
     if guesschannelbind != 0 and message.channel.id == guesschannelbind and guess_current_user == "NULL" and not message.content.startswith("*"):
         guess_current_user = message.author.name
         guess = message.content.lower()
-        if len(guess) == 1:
+        if len(guess) == 1 and guess[0].isalpha():
             guessed_letter = guess[0]
             
             if guessed_letter not in guessusedletters:
@@ -69,7 +75,7 @@ async def msg_wordle(message):
                     guesstries.clear()
                 guesslist.clear()
                 guessusedletters.clear()
-        else:
+        elif checkword(guess)==1:
             if guess == correct_word:
                 the_message = "**" + message.author.name + "** won! ^^" + '\n\n'
 
