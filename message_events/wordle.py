@@ -1,6 +1,8 @@
 from wordhoard import Definitions
 import random
 import requests
+import commands.fun
+import json
 
 guessusedletters = []
 guesstries = {}
@@ -10,7 +12,10 @@ guesslist = {}
 guessrun = 0
 correct_word = "NULL"
 guesschannelbind = 0
+guesshard = 0
+
 guesshardcore = 0
+guesshardcore_letters = {}
 
 def checkword(strin):
     for letter in strin:
@@ -24,6 +29,7 @@ async def msg_wordle(message):
     global correct_word
     global guesschannelbind
     global guess_current_user
+    global guesshard
     global guesshardcore
     
     if guesschannelbind != 0 and message.channel.id == guesschannelbind and guess_current_user == "NULL" and not message.content.startswith("*"):
@@ -32,20 +38,39 @@ async def msg_wordle(message):
         if len(guess) == 1 and guess[0].isalpha():
             guessed_letter = guess[0]
             
-            if guessed_letter not in guessusedletters:
-                guessusedletters.append(guessed_letter)
+            if guesshard == 0 and guesshardcore == 0:
+                if guessed_letter not in guessusedletters:
+                    guessusedletters.append(guessed_letter)
            
             if guessed_letter in list(correct_word):
-                guesslist[guessed_letter] = guessed_letter
+                if guesshardcore == 0:
+                    guesslist[guessed_letter] = guessed_letter
+                else:
+                    if guessed_letter not in guesshardcore_letters:
+                        guesshardcore_letters[guessed_letter] = 0
+                        for letter in list(correct_word):
+                            if letter == guessed_letter:
+                                guesshardcore_letters[guessed_letter] += 1
+                        
+            
             
             wordconstruct = ""
             
             for letter in list(correct_word):
-                wordconstruct += guesslist[letter]
+                if guesshardcore == 0:
+                    wordconstruct += guesslist[letter]
+                else:
+                    wordconstruct += "-"
+            
             wordconstruct = wordconstruct.capitalize()
             
             whattosend = "Word: **" + wordconstruct + "**\nLetters: **" + str(len(wordconstruct)) + "**\nUsed: " + str(guessusedletters).replace("'", "") + "\n> _" + message.author.name + "_"
-            if guesshardcore == 1: whattosend = "Word: **" + wordconstruct + "**\nLetters: **" + str(len(wordconstruct)) + "**\n> _" + message.author.name + "_"
+            if guesshard == 1: whattosend = "Word: **" + wordconstruct + "**\nLetters: **" + str(len(wordconstruct)) + "**\n> _" + message.author.name + "_"
+            elif guesshardcore == 1:
+                used = ""
+                for i in guesshardcore_letters.keys():
+                    used += f" {i} ({guesshardcore_letters[i]}) "
+                whattosend = "Word: **" + wordconstruct + "**\nLetters: **" + str(len(wordconstruct)) + "**\nUsed: " + used + "\n> _" + message.author.name + "_"
             await message.channel.send(whattosend)
             
             if message.author.name not in guesstries:
@@ -58,6 +83,7 @@ async def msg_wordle(message):
 
                 guesschannelbind = 0
                 guessrun = 0
+                guesshard = 0
                 guesshardcore = 0
                 
                 definition = Definitions(correct_word)
@@ -75,12 +101,14 @@ async def msg_wordle(message):
                     guesstries.clear()
                 guesslist.clear()
                 guessusedletters.clear()
+                guesshardcore_letters.clear()
         elif checkword(guess)==1:
             if guess == correct_word:
                 the_message = "**" + message.author.name + "** won! ^^" + '\n\n'
 
                 guesschannelbind = 0
                 guessrun = 0
+                guesshard = 0
                 guesshardcore = 0
                 
                 definition = Definitions(correct_word)
@@ -98,14 +126,25 @@ async def msg_wordle(message):
                     guesstries.clear()
                 guesslist.clear()
                 guessusedletters.clear()
+                guesshardcore_letters.clear()
             else:
                 wordconstruct = ""
+            
                 for letter in list(correct_word):
-                    wordconstruct += guesslist[letter]
+                    if guesshardcore == 0:
+                        wordconstruct += guesslist[letter]
+                    else:
+                        wordconstruct += "-"
+                
                 wordconstruct = wordconstruct.capitalize()
                 
                 whattosend = "Word: **" + wordconstruct + "**\nLetters: **" + str(len(wordconstruct)) + "**\nUsed: " + str(guessusedletters).replace("'", "") + "\n> _" + message.author.name + "_"
-                if guesshardcore == 1: whattosend = "Word: **" + wordconstruct + "**\nLetters: **" + str(len(wordconstruct)) + "**\n> _" + message.author.name + "_"
+                if guesshard == 1: whattosend = "Word: **" + wordconstruct + "**\nLetters: **" + str(len(wordconstruct)) + "**\n> _" + message.author.name + "_"
+                elif guesshardcore == 1:
+                    used = ""
+                    for i in guesshardcore_letters.keys():
+                        used += f" {i} ({guesshardcore_letters[i]}) "
+                    whattosend = "Word: **" + wordconstruct + "**\nLetters: **" + str(len(wordconstruct)) + "**\nUsed: " + used + "\n> _" + message.author.name + "_"
                 await message.channel.send(whattosend)
 
                 if message.author.name not in guesstries:
@@ -125,6 +164,7 @@ async def wordle(ctx, *args):
     global guessrun
     global correct_word
     global guesschannelbind
+    global guesshard
     global guesshardcore
     
     reset = " ".join(args)
@@ -133,12 +173,14 @@ async def wordle(ctx, *args):
         if guessrun == 1:
             guesschannelbind = 0
             guessrun = 0
+            guesshard = 0
             guesshardcore = 0
             guess_current_user = "NULL"
             correct_word = ""
             guesstries.clear()
             guesslist.clear()
             guessusedletters.clear()
+            guesshardcore_letters.clear()
             await ctx.send("Admin has canceled the game.")
         else:
             await ctx.send("No game commencing")
@@ -160,10 +202,12 @@ async def wordle(ctx, *args):
             correct_word = correct_word.decode('UTF-8')
             
             if "hardcore" in ctx.message.content.lower():
+                guesshardcore = 1
+            elif "hard" in ctx.message.content.lower():
                 while(len(correct_word)<10):
                     correct_word = random.choice(WORDS)
                     correct_word = correct_word.decode('UTF-8')
-                guesshardcore = 1
+                guesshard = 1
         
             for letter in correct_word:
                 guesslist[letter] = "-"
@@ -175,6 +219,11 @@ async def wordle(ctx, *args):
             
             await ctx.send("Game started and binded in <#" + str(ctx.channel.id) + ">.")
             await ctx.send("Word: **" + wordconstruct + "**\nLetters: **" + str(len(wordconstruct)) + "**")
+            if guesshardcore == 1:
+                data = json.loads(commands.fun.loadwordurban(correct_word))
+                msg = data["list"][random.randint(0, len(data["list"])-1)]['definition']
+                msg = msg.replace("[", "**[").replace("]", "]**")
+                await ctx.send(msg)
             
             guesschannelbind = ctx.channel.id
         except Exception as e:
