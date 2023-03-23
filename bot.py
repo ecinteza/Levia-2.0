@@ -1,11 +1,33 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 import json
 from threading import Thread
 import asyncio
+from datetime import datetime
+
+"""
+intents = discord.Intents.default()
+client = discord.Client(intents=intents)
+
+tree = app_commands.CommandTree(client)
+
+@client.event
+async def on_ready():
+    await tree.sync()
+    print("Ready!")
+
+@tree.command(name = "hi", description = "My first application Command")
+async def first_command(interaction):
+    await interaction.response.send_message("Hello!")
+    
+with open('TOKENS.json') as f:
+    data = json.load(f)
+    client.run(data['bot'])
+"""
 
 # RUN RUN RUN RUN RUN
-whotorun = "bot"
+whotorun = "beta"
 # beta / bot
 
 intents = discord.Intents.all()
@@ -30,14 +52,57 @@ import message_events.wordle     #
 import message_events.cazino     #
 ##################################
 
- ####### #     #                #     # #######  #####   #####     #     #####  ####### 
- #     # ##    #                ##   ## #       #     # #     #   # #   #     # #       
- #     # # #   #                # # # # #       #       #        #   #  #       #       
- #     # #  #  #                #  #  # #####    #####   #####  #     # #  #### #####   
- #     # #   # #                #     # #             #       # ####### #     # #       
- #     # #    ##                #     # #       #     # #     # #     # #     # #       
- ####### #     #                #     # #######  #####   #####  #     #  #####  ####### 
-                                                                  
+
+
+@bot.event
+async def on_member_join(member):
+    role = member.guild.get_role(486508485844926475)
+    await member.add_roles(role)
+    embed = discord.Embed(title = "Member joined",
+                          description = f"{member.name}#{member.discriminator } ({member.id})",
+                          color = discord.Color.brand_green())
+    embed.set_footer = datetime.now().strftime("%Y-%m-%d %H:%M")
+    
+    Logchannel = bot.get_channel(484331277164740620)
+    await Logchannel.send(embed=embed)
+    
+@bot.event
+async def on_member_remove(member):
+    embed = discord.Embed(title = "Member left",
+                          description = f"{member.name}#{member.discriminator } ({member.id})",
+                          color = discord.Color.dark_red())
+    embed.set_footer = datetime.now().strftime("%Y-%m-%d %H:%M")
+    
+    Logchannel = bot.get_channel(484331277164740620)
+    await Logchannel.send(embed=embed)
+    
+@bot.event
+async def on_message_edit(before, after):
+    if before.author.bot: return
+    
+    embed = discord.Embed(title = f"Message edited in #{before.channel.name} ({before.id})",
+                          description = f"Before: **{before.content}** \n\nAfter: **{after.content}**",
+                          color = discord.Color.blurple())
+    embed.set_footer(text=f"{before.author.name}#{before.author.discriminator } ({before.author.id}) | {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    
+    Logchannel = bot.get_channel(484331277164740620)
+    await Logchannel.send(embed=embed)
+
+@bot.event
+async def on_message_delete(message):
+    if message.author.bot: return
+    
+    embed = discord.Embed(title = f"Message deleted in #{message.channel.name} ({message.id})",
+                          description = f"**{message.content}**",
+                          color = discord.Color.blurple())
+    embed.set_footer(text=f"{message.author.name}#{message.author.discriminator } ({message.author.id}) | {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    
+    Logchannel = bot.get_channel(484331277164740620)
+    await Logchannel.send(embed=embed)
+                                     
+                                     
+############################################################################################################
+                             
 @bot.event  
 async def on_message(message):
     if message.author.bot or len(message.content) == 0:
@@ -98,7 +163,7 @@ async def wordle(ctx, *args):                         #
 ###################################################################    
 @bot.command(brief = "Client Version")
 async def version(ctx):
-    await ctx.send("xLevia v2.1.4")
+    await ctx.send("xLevia v2.1.5")
 
 import commands.basics                                            
 @bot.command(brief = "Pong")                                      
@@ -244,3 +309,8 @@ async def ticket(ctx, *args):
 with open('TOKENS.json') as f:
         data = json.load(f)
         bot.run(data[whotorun])
+        
+# FOR EACH CHANNEL
+#
+#    for channel in ctx.guild.text_channels:
+#        await channel.set_permissions(ctx.guild.get_role(1088420997226565652), view_channel=False)

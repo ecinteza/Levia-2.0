@@ -7,7 +7,7 @@ msg = "NULL"
 msgtogoogle = "NULL"
 
 async def wys(message):
-    if " 727 " in message.content.lower() or "727 " in message.content.lower() or " 727" in message.content.lower():
+    if " 727 " in message.content.lower() or "727 " in message.content.lower() or " 727" in message.content.lower() or message.content == "727":
         await message.channel.send("WYSI!! 👈 😱")
 
 async def reply3(message):

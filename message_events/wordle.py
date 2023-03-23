@@ -32,7 +32,7 @@ async def msg_wordle(message):
     global guesshard
     global guesshardcore
     
-    if guesschannelbind != 0 and message.channel.id == guesschannelbind and guess_current_user == "NULL" and not message.content.startswith("*"):
+    if guesschannelbind != 0 and message.channel.id == guesschannelbind and guess_current_user == "NULL":
         guess_current_user = message.author.name
         guess = message.content.lower()
         if len(guess) == 1 and guess[0].isalpha():
@@ -86,10 +86,6 @@ async def msg_wordle(message):
                 guesshard = 0
                 guesshardcore = 0
                 
-                definition = Definitions(correct_word)
-                defs = definition.find_definitions()
-                defs = str(defs).replace("[", "").replace("]", "").replace("'", "").replace("38;2;255;255;255m", "").replace("38;2;255;0;255m", "") #lazy
-                the_message += "Definition: **" + defs + "**" + '\n\n'
                 
                 if len(guesstries)>0:
                     guesslb = ""
@@ -97,8 +93,8 @@ async def msg_wordle(message):
                         guesslb += "**" + user + "** tried **" + str(guesstries[user]) + "** times\n"
                     
                     the_message += "**Tries leaderboard:**\n\n" + guesslb
-                    await message.channel.send(the_message)
                     guesstries.clear()
+                await message.channel.send(the_message)
                 guesslist.clear()
                 guessusedletters.clear()
                 guesshardcore_letters.clear()
@@ -111,19 +107,16 @@ async def msg_wordle(message):
                 guesshard = 0
                 guesshardcore = 0
                 
-                definition = Definitions(correct_word)
-                defs = definition.find_definitions()
-                defs = str(defs).replace("[", "").replace("]", "").replace("'", "").replace("38;2;255;255;255m", "").replace("38;2;255;0;255m", "") #lazy
-                the_message += "Definition: **" + defs + "**" + '\n\n'
-                
                 if len(guesstries)>0:
                     guesslb = ""
                     for user in guesstries.keys():
                         guesslb += "**" + user + "** tried **" + str(guesstries[user]) + "** times\n"
                     
                     the_message += "**Tries leaderboard:**\n\n" + guesslb
-                    await message.channel.send(the_message)
                     guesstries.clear()
+                    
+                await message.channel.send(the_message)
+                    
                 guesslist.clear()
                 guessusedletters.clear()
                 guesshardcore_letters.clear()
@@ -158,6 +151,8 @@ wordleAdmins = [
     246213412059611136
     ]
 
+wordleGiveUp = []
+
 async def wordle(ctx, *args):
     global guess_current_user
     global guesslist
@@ -181,13 +176,33 @@ async def wordle(ctx, *args):
             guesslist.clear()
             guessusedletters.clear()
             guesshardcore_letters.clear()
-            await ctx.send("Admin has canceled the game.")
+            await ctx.send(f"Admin has canceled the game. The word was {correct_word}")
         else:
             await ctx.send("No game commencing")
         return
     
+    if (reset == "give up" and ctx.author.id not in wordleGiveUp):
+        wordleGiveUp.append(ctx.author.id)
+        await ctx.send(ctx.author.name + " opted in for canceling the game.")
+        await ctx.message.delete()
+        if len(wordleGiveUp)>=len(guesstries.keys()):
+            await ctx.send(f"All playing users have agreed on canceling the game. The word was {correct_word}")
+            guesschannelbind = 0
+            guessrun = 0
+            guesshard = 0
+            guesshardcore = 0
+            guess_current_user = "NULL"
+            correct_word = ""
+            guesstries.clear()
+            guesslist.clear()
+            guessusedletters.clear()
+            guesshardcore_letters.clear()
+            wordleGiveUp.clear()
+        return
+    
     if guessrun == 0:
         try:
+            wordleGiveUp.clear()
             guessrun = 1
             sites = [
                 "https://raw.githubusercontent.com/mahsu/IndexingExercise/master/5000-words.txt",
@@ -200,6 +215,7 @@ async def wordle(ctx, *args):
             WORDS = response.content.splitlines()
             correct_word = random.choice(WORDS)
             correct_word = correct_word.decode('UTF-8')
+            correct_word = correct_word.lower()
             
             if "hardcore" in ctx.message.content.lower():
                 guesshardcore = 1
@@ -220,10 +236,20 @@ async def wordle(ctx, *args):
             await ctx.send("Game started and binded in <#" + str(ctx.channel.id) + ">.")
             await ctx.send("Word: **" + wordconstruct + "**\nLetters: **" + str(len(wordconstruct)) + "**")
             if guesshardcore == 1:
-                data = json.loads(commands.fun.loadwordurban(correct_word))
-                msg = data["list"][random.randint(0, len(data["list"])-1)]['definition']
-                msg = msg.replace("[", "**[").replace("]", "]**")
-                await ctx.send(msg)
+                try:
+                    search = correct_word
+                    definition = Definitions(search)
+                    defs = definition.find_definitions()
+                    if "38;2;255;255;255m" in str(defs):
+                        data = json.loads(commands.fun.loadwordurban(correct_word))
+                        msg = data["list"][random.randint(0, len(data["list"])-1)]['definition']
+                        msg = msg.replace("[", "**[").replace("]", "]**")
+                        await ctx.send(msg)
+                    else:
+                        await ctx.send(str(defs).replace("[", "").replace("]", "").replace("'", "").replace("'", ""), reference=ctx.message)
+                except Exception as e:
+                    await ctx.send(f"Some error occured... ```{e}```")
+                
             
             guesschannelbind = ctx.channel.id
         except Exception as e:

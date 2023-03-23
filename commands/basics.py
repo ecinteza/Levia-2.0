@@ -7,11 +7,15 @@ import random
 import aiohttp
 from discord import Webhook
 from datetime import datetime
+import time
 
 from . import utils
 
 async def ping(ctx, bot):
-    await ctx.send(f'My ping is {bot.latency}!')
+    before = time.monotonic()
+    message = await ctx.send("Pong!")
+    ping = (time.monotonic() - before) * 1000
+    await message.edit(content=f"Pong! Server Latency `{int(ping)}ms` Bot Latency `{round(bot.latency, 1)}ms`")
     
 async def pfphex(ctx):
     msg = await ctx.send("Loading...")
@@ -130,8 +134,8 @@ async def pfphexpal(ctx):
             embeds.append(embed)
         
         async with aiohttp.ClientSession() as session:
-            webhook = Webhook.from_url('https://discord.com/api/webhooks/1081724666240045207/7rhpOhmBMUtcwHbN9Rhs0Jfw3xbgOKY50STYXn8FJSDK1GAAjxYX0T6Qwi6I65aYMZUR', session=session)
-            await webhook.send("**" + ctx.message.author.name + "** requested **" + mentioned.name + "'s** colour palette in <#" + str(ctx.channel.id) + ">", username="Levia's Assistant", embeds=embeds)
+            webhook = Webhook.from_url('https://discord.com/api/webhooks/1088213642165624912/sI9YIJHw0ucpRgibP0t5V1csn4_5uUoe52PkolsCLaLq7FUJ2WG62w9mzcRRzxCngFnC', session=session)
+            await webhook.send("**" + ctx.message.author.name + "** requested **" + mentioned.name + "'s** colour palette in <#" + str(ctx.channel.id) + ">", embeds=embeds)
             if ctx.channel.id != 719967026461802516:
                 await ctx.send("Check <#719967026461802516>")
             
@@ -151,8 +155,8 @@ async def pfphexpal(ctx):
             embeds.append(embed)
         
         async with aiohttp.ClientSession() as session:
-            webhook = Webhook.from_url('https://discord.com/api/webhooks/1081724666240045207/7rhpOhmBMUtcwHbN9Rhs0Jfw3xbgOKY50STYXn8FJSDK1GAAjxYX0T6Qwi6I65aYMZUR', session=session)
-            await webhook.send("**" + ctx.message.author.name + "** requested their colour palette in <#" + str(ctx.channel.id) + ">", username="Levia's Assistant", embeds=embeds)
+            webhook = Webhook.from_url('https://discord.com/api/webhooks/1088213642165624912/sI9YIJHw0ucpRgibP0t5V1csn4_5uUoe52PkolsCLaLq7FUJ2WG62w9mzcRRzxCngFnC', session=session)
+            await webhook.send("**" + ctx.message.author.name + "** requested their colour palette in <#" + str(ctx.channel.id) + ">", embeds=embeds)
             if ctx.channel.id != 719967026461802516:
                 await ctx.send("Check <#719967026461802516>")
             
