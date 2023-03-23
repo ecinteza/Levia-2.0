@@ -27,7 +27,7 @@ with open('TOKENS.json') as f:
 """
 
 # RUN RUN RUN RUN RUN
-whotorun = "beta"
+whotorun = "bot"
 # beta / bot
 
 intents = discord.Intents.all()
@@ -37,7 +37,7 @@ intents.members = True
 prefix = '?'
 botactivity = "ur mom"
 
-if whotorun == "bot":
+if whotorun == "beta":
     prefix = "."
     botactivity = "ur dad"
 
