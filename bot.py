@@ -61,7 +61,7 @@ async def on_member_join(member):
     embed = discord.Embed(title = "Member joined",
                           description = f"{member.name}#{member.discriminator } ({member.id})",
                           color = discord.Color.brand_green())
-    embed.set_footer = datetime.now().strftime("%Y-%m-%d %H:%M")
+    embed.set_footer(text=datetime.now().strftime("%Y-%m-%d %H:%M"))
     
     Logchannel = bot.get_channel(484331277164740620)
     await Logchannel.send(embed=embed)
@@ -71,7 +71,7 @@ async def on_member_remove(member):
     embed = discord.Embed(title = "Member left",
                           description = f"{member.name}#{member.discriminator } ({member.id})",
                           color = discord.Color.dark_red())
-    embed.set_footer = datetime.now().strftime("%Y-%m-%d %H:%M")
+    embed.set_footer(text=datetime.now().strftime("%Y-%m-%d %H:%M"))
     
     Logchannel = bot.get_channel(484331277164740620)
     await Logchannel.send(embed=embed)
