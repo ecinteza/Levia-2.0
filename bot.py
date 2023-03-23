@@ -37,7 +37,7 @@ intents.members = True
 prefix = '?'
 botactivity = "ur mom"
 
-if whotorun == "beta":
+if whotorun == "bot":
     prefix = "."
     botactivity = "ur dad"
 
