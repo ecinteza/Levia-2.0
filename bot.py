@@ -78,7 +78,7 @@ async def on_member_remove(member):
     
 @bot.event
 async def on_message_edit(before, after):
-    if before.author.bot: return
+    if before.author.bot or before.content == after.content: return
     
     embed = discord.Embed(title = f"Message edited in #{before.channel.name} ({before.id})",
                           description = f"Before: **{before.content}** \n\nAfter: **{after.content}**",
@@ -163,7 +163,7 @@ async def wordle(ctx, *args):                         #
 ###################################################################    
 @bot.command(brief = "Client Version")
 async def version(ctx):
-    await ctx.send("xLevia v2.1.5")
+    await ctx.send("xLevia v2.2")
 
 import commands.basics                                            
 @bot.command(brief = "Pong")                                      
