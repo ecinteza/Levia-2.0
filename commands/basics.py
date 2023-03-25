@@ -134,7 +134,7 @@ async def pfphexpal(ctx):
             embeds.append(embed)
         
         async with aiohttp.ClientSession() as session:
-            webhook = Webhook.from_url('https://discord.com/api/webhooks/1088213642165624912/sI9YIJHw0ucpRgibP0t5V1csn4_5uUoe52PkolsCLaLq7FUJ2WG62w9mzcRRzxCngFnC', session=session)
+            webhook = Webhook.from_url('https://discord.com/api/webhooks/1089014599979892757/vsvMalc5JWNx1pQGQ3YSLolTXHXF_2pbUXK_MlR2C_awzmYQXsRVCqoYx7R9t00FY4lb', session=session)
             await webhook.send("**" + ctx.message.author.name + "** requested **" + mentioned.name + "'s** colour palette in <#" + str(ctx.channel.id) + ">", embeds=embeds)
             if ctx.channel.id != 719967026461802516:
                 await ctx.send("Check <#719967026461802516>")
@@ -155,7 +155,7 @@ async def pfphexpal(ctx):
             embeds.append(embed)
         
         async with aiohttp.ClientSession() as session:
-            webhook = Webhook.from_url('https://discord.com/api/webhooks/1088213642165624912/sI9YIJHw0ucpRgibP0t5V1csn4_5uUoe52PkolsCLaLq7FUJ2WG62w9mzcRRzxCngFnC', session=session)
+            webhook = Webhook.from_url('https://discord.com/api/webhooks/1089014599979892757/vsvMalc5JWNx1pQGQ3YSLolTXHXF_2pbUXK_MlR2C_awzmYQXsRVCqoYx7R9t00FY4lb', session=session)
             await webhook.send("**" + ctx.message.author.name + "** requested their colour palette in <#" + str(ctx.channel.id) + ">", embeds=embeds)
             if ctx.channel.id != 719967026461802516:
                 await ctx.send("Check <#719967026461802516>")
