@@ -133,11 +133,9 @@ async def pfphexpal(ctx):
                               color = int(utils.rgb_to_hex(palette[i]), 16))
             embeds.append(embed)
         
-        async with aiohttp.ClientSession() as session:
-            webhook = Webhook.from_url('https://discord.com/api/webhooks/1089014599979892757/vsvMalc5JWNx1pQGQ3YSLolTXHXF_2pbUXK_MlR2C_awzmYQXsRVCqoYx7R9t00FY4lb', session=session)
-            await webhook.send("**" + ctx.message.author.name + "** requested **" + mentioned.name + "'s** colour palette in <#" + str(ctx.channel.id) + ">", embeds=embeds)
-            if ctx.channel.id != 719967026461802516:
-                await ctx.send("Check <#719967026461802516>")
+        hook = await ctx.message.channel.create_webhook(name=f"Levia's Assistant")
+        await hook.send(embeds=embeds)
+        await hook.delete()
             
         os.remove(pic)
     else:
@@ -154,11 +152,9 @@ async def pfphexpal(ctx):
                               color = int(utils.rgb_to_hex(palette[i]), 16))
             embeds.append(embed)
         
-        async with aiohttp.ClientSession() as session:
-            webhook = Webhook.from_url('https://discord.com/api/webhooks/1089014599979892757/vsvMalc5JWNx1pQGQ3YSLolTXHXF_2pbUXK_MlR2C_awzmYQXsRVCqoYx7R9t00FY4lb', session=session)
-            await webhook.send("**" + ctx.message.author.name + "** requested their colour palette in <#" + str(ctx.channel.id) + ">", embeds=embeds)
-            if ctx.channel.id != 719967026461802516:
-                await ctx.send("Check <#719967026461802516>")
+        hook = await ctx.message.channel.create_webhook(name="Levia's Assistant")
+        await hook.send(embeds=embeds)
+        await hook.delete()
             
         os.remove(pic)
     await msg.delete()
