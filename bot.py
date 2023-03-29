@@ -27,7 +27,7 @@ with open('TOKENS.json') as f:
 """
 
 # RUN RUN RUN RUN
-whotorun = "beta"
+whotorun = "bot"
 # beta / bot
 
 intents = discord.Intents.all()
