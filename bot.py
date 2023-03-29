@@ -27,7 +27,7 @@ with open('TOKENS.json') as f:
 """
 
 # RUN RUN RUN RUN
-whotorun = "bot"
+whotorun = "beta"
 # beta / bot
 
 intents = discord.Intents.all()
@@ -119,11 +119,11 @@ async def on_message(message):
     if message.content.lower() == "im bacc":
         await message.channel.send("better than ever", reference=message)
         
-    await message_events.mock.mocking(message)
-    await message_events.mock.reply3(message)
-    await message_events.wordle.msg_wordle(message)
-    await message_events.mock.wys(message)
-    await message_events.cazino.roulette_thr(message)
+    asyncio.get_event_loop().create_task(message_events.mock.mocking(message))
+    asyncio.get_event_loop().create_task(message_events.mock.reply3(message))
+    asyncio.get_event_loop().create_task(message_events.wordle.msg_wordle(message))
+    asyncio.get_event_loop().create_task(message_events.mock.wys(message))
+    asyncio.get_event_loop().create_task(message_events.cazino.roulette_thr(message))
 
 ###########
 # CAZINO
@@ -137,18 +137,18 @@ import commands.gambling
 
 @bot.command(brief = "Slots")
 async def slots(ctx):
-    await commands.gambling.slots(ctx)
+    asyncio.get_event_loop().create_task(commands.gambling.slots(ctx))
 
 #######################################################
-#   IDK                                               #
-@bot.command(brief = "Let me google that for you")    #
-async def idk(ctx, *args):                            #
-    await message_events.mock.idk(ctx, args)          #
+#   IDK                                               
+@bot.command(brief = "Let me google that for you")    
+async def idk(ctx, *args):                            
+    asyncio.get_event_loop().create_task(message_events.mock.idk(ctx, args))
 #######################################################
-#   WORDLE                                            #
-@bot.command(brief = "Spanzuratoarea but in english") #
-async def wordle(ctx, *args):                         #
-    await message_events.wordle.wordle(ctx, *args)    #
+#   WORDLE                                            
+@bot.command(brief = "Spanzuratoarea but in english") 
+async def wordle(ctx, *args):                         
+    asyncio.get_event_loop().create_task(message_events.wordle.wordle(ctx, *args))    
 #######################################################
 
 ###################################################################
@@ -168,38 +168,38 @@ async def version(ctx):
 import commands.basics                                            
 @bot.command(brief = "Pong")                                      
 async def ping(ctx):                                              
-    await commands.basics.ping(ctx, bot)                          
+    asyncio.get_event_loop().create_task(commands.basics.ping(ctx, bot))                          
                                                                                                                           
 @bot.command(brief = "Get the dominant hex of ur profile pic",
              aliases = ['phex'])    
 async def pfphex(ctx):                                            
-    await commands.basics.pfphex(ctx)                             
+    asyncio.get_event_loop().create_task(commands.basics.pfphex(ctx))                             
 
 @bot.command(brief = "Start a poll")
 async def poll(ctx, *args):
-    await commands.basics.poll(ctx, *args)
+    asyncio.get_event_loop().create_task(commands.basics.poll(ctx, *args))
     
 @bot.command(brief = "Send a suggestion",
              aliases = ["suggestion"])
 async def suggest(ctx, *args):
-    await commands.basics.suggest(ctx, bot, *args)
+    asyncio.get_event_loop().create_task(commands.basics.suggest(ctx, bot, *args))
     
 @bot.command(brief = "Check what colour a hex is")
 async def hex(ctx, *args):
-    await commands.basics.hex(ctx, *args)
+    asyncio.get_event_loop().create_task(commands.basics.hex(ctx, *args))
     
 @bot.command(brief = "Get the dominant hex palette of ur profile pic",
              aliases = ['phexpal', 'phexp'])
 async def pfphexpal(ctx):
-    await commands.basics.pfphexpal(ctx)
+    asyncio.get_event_loop().create_task(commands.basics.pfphexpal(ctx))
     
 @bot.command(brief = "Get your or mentioned user's avatar")
 async def avatar(ctx):
-    await commands.basics.avatar(ctx)
+    asyncio.get_event_loop().create_task(commands.basics.avatar(ctx))
     
 @bot.command(brief = "Report a bug")
 async def report(ctx, *args):
-    await commands.basics.report(ctx, bot, *args)
+    asyncio.get_event_loop().create_task(commands.basics.report(ctx, bot, *args))
     
     
 ###################################################################
@@ -217,27 +217,27 @@ import commands.fun
 @bot.command(brief = "Let's see how big ur peen is",
              aliases = ["pula"])
 async def penis(ctx):
-    await commands.fun.penis(ctx)
+    asyncio.get_event_loop().create_task(commands.fun.penis(ctx))
     
 @bot.command(brief = "see how much u are compatible w someone")
 async def love(ctx, *args):
-    await commands.fun.love(ctx, *args)
+    asyncio.get_event_loop().create_task(commands.fun.love(ctx, *args))
 
 @bot.command(brief = "see how much u hate someone")
 async def hate(ctx, *args):
-    await commands.fun.hate(ctx, *args)
+    asyncio.get_event_loop().create_task(commands.fun.hate(ctx, *args))
 
 @bot.command(brief = "Search for words in the dictionary")
 async def dict(ctx, *args):
-    await commands.fun.dict(ctx, *args)
+    asyncio.get_event_loop().create_task(commands.fun.dict(ctx, *args))
     
 @bot.command(brief = "Search for words in the urban dictionary")
 async def urban(ctx, *args):
-    await commands.fun.urban(ctx, *args)
+    asyncio.get_event_loop().create_task(commands.fun.urban(ctx, *args))
     
 @bot.command(brief = "Rock Paper & Scissors")
 async def rps(ctx, arg):
-    await commands.fun.rps(ctx, arg)
+    asyncio.get_event_loop().create_task(commands.fun.rps(ctx, arg))
     
 ###################################################################
                                                  
@@ -253,15 +253,15 @@ async def rps(ctx, arg):
 import commands.genshin
 @bot.command(brief = "See how many wishes you have")
 async def wishes(ctx, arg):
-    await commands.genshin.wishes(ctx, prefix, arg)
+    asyncio.get_event_loop().create_task(commands.genshin.wishes(ctx, prefix, arg))
 
 @bot.command(brief = "Crit Value Calculator [crit rate * 2 + crit damage]")
 async def cvc(ctx, *args):
-    await commands.genshin.cvc(ctx, prefix, *args)
+    asyncio.get_event_loop().create_task(commands.genshin.cvc(ctx, prefix, *args))
     
 @bot.command(brief = "Ascension Mats Today")
 async def asct(ctx):
-    await commands.genshin.asct(ctx)
+    asyncio.get_event_loop().create_task(commands.genshin.asct(ctx))
     
 ###################################################################
 
@@ -282,7 +282,7 @@ import commands.mods
 async def rolecolour(ctx, *args):
     arguments = " ".join(args)
     c = arguments.split(" / ")
-    await commands.mods.rolecolour(ctx, arguments, c)
+    asyncio.get_event_loop().create_task(commands.mods.rolecolour(ctx, arguments, c))
     
 ###################################################################
                                
@@ -299,12 +299,11 @@ import commands.admin
 @bot.command(brief = "Fetch messages [ADMIN ONLY]",
              description="fm [channel id] [user id] [number of messages to search through]")
 async def fm(ctx, *args):
-    await commands.admin.fm(ctx, bot, *args)
-
+    asyncio.get_event_loop().create_task(commands.admin.fm(ctx, bot, *args))
 
 @bot.command(brief = "Mark the status of the ticket [ADMIN ONLY]")
 async def ticket(ctx, *args):
-    await commands.admin.ticket(ctx, bot, *args)
+    asyncio.get_event_loop().create_task(commands.admin.ticket(ctx, bot, *args))
     
 with open('TOKENS.json') as f:
         data = json.load(f)
