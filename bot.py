@@ -26,8 +26,8 @@ with open('TOKENS.json') as f:
     client.run(data['bot'])
 """
 
-# RUN RUN RUN RUN RUN
-whotorun = "beta"
+# RUN RUN RUN RUN
+whotorun = "bot"
 # beta / bot
 
 intents = discord.Intents.all()
