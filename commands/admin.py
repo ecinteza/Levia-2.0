@@ -62,16 +62,3 @@ async def ticket(ctx, bot, *args):
         await ctx.message.delete()
         await msg.delete()
         await ctx.send(embed=embed)
-        
-async def eval(ctx, *args):
-    if ctx.message.author.id != 255432828668477441:
-        await ctx.send("You wish you could use this, don't u?")
-        return
-    try:
-        code = " ".join(args)
-        f = open("code.py", "w")
-        f.write(code)
-        f.close()
-        exec(open('code.py').read())
-    except Exception as e:
-        await ctx.send(f"An exception occured. ```{e}```")

@@ -52,8 +52,6 @@ import message_events.wordle     #
 import message_events.cazino     #
 ##################################
 
-
-
 @bot.event
 async def on_member_join(member):
     role = member.guild.get_role(486508485844926475)
@@ -307,10 +305,6 @@ async def fm(ctx, *args):
 @bot.command(brief = "Mark the status of the ticket [ADMIN ONLY]")
 async def ticket(ctx, *args):
     await commands.admin.ticket(ctx, bot, *args)
-    
-@bot.command(brief = "Mark the status of the ticket [ADMIN ONLY]")
-async def eval(ctx, *args):
-    await commands.admin.eval(ctx, *args)
     
 with open('TOKENS.json') as f:
         data = json.load(f)
