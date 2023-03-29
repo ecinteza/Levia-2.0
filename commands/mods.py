@@ -23,3 +23,9 @@ async def rolecolour(ctx, arguments, c):
         
     else:
         await ctx.channel.send("Changed.")
+        
+async def purge(ctx, arguments):
+    try:
+        await ctx.channel.purge(limit=int(arguments)+1)
+    except Exception as e:
+        await ctx.channel.send(f"Something went wrong. ```{e}``````{arguments}```")

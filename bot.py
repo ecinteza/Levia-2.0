@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from discord import app_commands
+#from discord import app_commands
 import json
 from threading import Thread
 import asyncio
@@ -163,7 +163,7 @@ async def wordle(ctx, *args):
 ###################################################################    
 @bot.command(brief = "Client Version")
 async def version(ctx):
-    await ctx.send("xLevia v2.2")
+    await ctx.send("xLevia v2.3")
 
 import commands.basics                                            
 @bot.command(brief = "Pong")                                      
@@ -283,6 +283,13 @@ async def rolecolour(ctx, *args):
     arguments = " ".join(args)
     c = arguments.split(" / ")
     asyncio.get_event_loop().create_task(commands.mods.rolecolour(ctx, arguments, c))
+    
+@bot.command(brief = "Purge a number of messages from the current text channel [MODS ONLY]",
+             description="purge [number of messages: default is 10]",
+             aliases=["clear"])
+@discord.ext.commands.has_role(719954439078936619)
+async def purge(ctx, arguments = 11):
+    asyncio.get_event_loop().create_task(commands.mods.purge(ctx, arguments))
     
 ###################################################################
                                
