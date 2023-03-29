@@ -26,7 +26,7 @@ with open('TOKENS.json') as f:
     client.run(data['bot'])
 """
 
-# RUN RUN RUN RUN RUN
+# RUN RUN RUN RUN
 whotorun = "bot"
 # beta / bot
 
