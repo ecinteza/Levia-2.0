@@ -79,7 +79,7 @@ async def on_member_remove(member):
 @bot.event
 async def on_message_edit(before, after):
     if before.author.bot or before.content == after.content: return
-    if before.content.startswith("?"): return
+    if before.content.startswith(prefix): return
     
     embed = discord.Embed(title = f"Message edited in #{before.channel.name} ({before.id})",
                           description = f"Before: **{before.content}** \n\nAfter: **{after.content}**",
@@ -92,7 +92,7 @@ async def on_message_edit(before, after):
 @bot.event
 async def on_message_delete(message):
     if message.author.bot: return
-    if message.content.startswith("?"): return
+    if message.content.startswith(prefix): return
     
     embed = discord.Embed(title = f"Message deleted in #{message.channel.name} ({message.id})",
                           description = f"**{message.content}**",
