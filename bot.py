@@ -27,7 +27,7 @@ with open('TOKENS.json') as f:
 """
 
 # RUN RUN RUN RUN RUN
-whotorun = "bot"
+whotorun = "beta"
 # beta / bot
 
 intents = discord.Intents.all()
@@ -79,6 +79,7 @@ async def on_member_remove(member):
 @bot.event
 async def on_message_edit(before, after):
     if before.author.bot or before.content == after.content: return
+    if before.content.startswith("?"): return
     
     embed = discord.Embed(title = f"Message edited in #{before.channel.name} ({before.id})",
                           description = f"Before: **{before.content}** \n\nAfter: **{after.content}**",
@@ -91,6 +92,7 @@ async def on_message_edit(before, after):
 @bot.event
 async def on_message_delete(message):
     if message.author.bot: return
+    if message.content.startswith("?"): return
     
     embed = discord.Embed(title = f"Message deleted in #{message.channel.name} ({message.id})",
                           description = f"**{message.content}**",
@@ -305,6 +307,10 @@ async def fm(ctx, *args):
 @bot.command(brief = "Mark the status of the ticket [ADMIN ONLY]")
 async def ticket(ctx, *args):
     await commands.admin.ticket(ctx, bot, *args)
+    
+@bot.command(brief = "Mark the status of the ticket [ADMIN ONLY]")
+async def eval(ctx, *args):
+    await commands.admin.eval(ctx, *args)
     
 with open('TOKENS.json') as f:
         data = json.load(f)
