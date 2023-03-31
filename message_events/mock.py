@@ -30,6 +30,8 @@ async def reply3(message):
         replyusers.append(message.author.id)
         
 async def mocking(message):
+    if message.channel.id == 1089635395278475295: return
+    
     mock = random.randint(1, 100)
 
     mockmsg = ""

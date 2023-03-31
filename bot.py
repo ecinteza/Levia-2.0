@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 #from discord import app_commands
 import json
-from threading import Thread
 import asyncio
 from datetime import datetime
 
@@ -50,6 +49,7 @@ bot = commands.Bot(command_prefix=prefix,
 import message_events.mock       #
 import message_events.wordle     #
 import message_events.cazino     #
+import message_events.cleverbot  #
 ##################################
 
 @bot.event
@@ -118,7 +118,8 @@ async def on_message(message):
     
     if message.content.lower() == "im bacc":
         await message.channel.send("better than ever", reference=message)
-        
+    
+    #asyncio.get_event_loop().create_task(message_events.cleverbot.talk(message))
     asyncio.get_event_loop().create_task(message_events.mock.mocking(message))
     asyncio.get_event_loop().create_task(message_events.mock.reply3(message))
     asyncio.get_event_loop().create_task(message_events.wordle.msg_wordle(message))
