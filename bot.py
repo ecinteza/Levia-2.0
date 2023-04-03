@@ -29,7 +29,7 @@ with open('TOKENS.json') as f:
 """
 
 # RUN RUN RUN RUN
-whotorun = "beta"
+whotorun = "bot"
 # beta / bot
 
 f = open('DB.json')
