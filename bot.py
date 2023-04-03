@@ -2,8 +2,11 @@ import discord
 from discord.ext import commands
 #from discord import app_commands
 import json
+import time
 import asyncio
+from threading import Thread
 from datetime import datetime
+import mysql.connector
 
 """
 intents = discord.Intents.default()
@@ -26,8 +29,19 @@ with open('TOKENS.json') as f:
 """
 
 # RUN RUN RUN RUN
-whotorun = "bot"
+whotorun = "beta"
 # beta / bot
+
+f = open('DB.json')
+data = json.load(f)
+myconn = mysql.connector.connect(host = data["endpoint"],
+                                port = data["port"],
+                                user = data["username"],
+                                password = data["password"],
+                                database = data["database"])
+cursor = myconn.cursor()
+print("Connected to the levicoins database")
+f.close()
 
 intents = discord.Intents.all()
 intents.message_content = True
@@ -45,10 +59,11 @@ bot = commands.Bot(command_prefix=prefix,
                    activity=discord.Activity(type=discord.ActivityType.listening, name=botactivity))
 
 ##################################
-#     EVENTS                     #
-import message_events.mock       #
-import message_events.wordle     #
-import message_events.cazino     #
+#     EVENTS                     
+import message_events.mock       
+import message_events.wordle     
+import message_events.cazino     
+import message_events.makemoney
 ##################################
 
 @bot.event
@@ -107,6 +122,9 @@ async def on_message(message):
     if message.author.bot or len(message.content) == 0:
         return
     
+    asyncio.get_event_loop().create_task(message_events.makemoney.makemoney(message, cursor))
+    myconn.commit()
+    
     # PROCESS COMMANDS
     if message.content.startswith(prefix):
         process = message.content.split(" ")[0].lower()
@@ -122,21 +140,22 @@ async def on_message(message):
     asyncio.get_event_loop().create_task(message_events.mock.reply3(message))
     asyncio.get_event_loop().create_task(message_events.wordle.msg_wordle(message))
     asyncio.get_event_loop().create_task(message_events.mock.wys(message))
-    asyncio.get_event_loop().create_task(message_events.cazino.roulette_thr(message))
+    asyncio.get_event_loop().create_task(message_events.cazino.roulette_thr(message, cursor))
+    
 
 ###########
 # CAZINO
 ###########
 
 @bot.command(brief = "Roulette")
-async def roulette(ctx):
-    asyncio.get_event_loop().create_task(message_events.cazino.roulette(ctx))
+async def roulette(ctx, betmoney):
+    asyncio.get_event_loop().create_task(message_events.cazino.roulette(ctx, betmoney, cursor))
     
 import commands.gambling
 
 @bot.command(brief = "Slots")
-async def slots(ctx):
-    asyncio.get_event_loop().create_task(commands.gambling.slots(ctx))
+async def slots(ctx, betmoney):
+    asyncio.get_event_loop().create_task(commands.gambling.slots(ctx, betmoney, cursor))
 
 #######################################################
 #   IDK                                               
@@ -149,6 +168,15 @@ async def idk(ctx, *args):
 async def wordle(ctx, *args):                         
     asyncio.get_event_loop().create_task(message_events.wordle.wordle(ctx, *args))    
 #######################################################
+
+###################################################################
+# COINS
+
+import commands.coins
+@bot.command(brief = "See how much levicoins you have", aliases = ["bal"])
+async def balance(ctx):
+    asyncio.get_event_loop().create_task(commands.coins.balance(ctx, myconn, cursor))
+###################################################################
 
 ###################################################################
 

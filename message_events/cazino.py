@@ -8,29 +8,39 @@ bettedcolour = {}
 bettednumber = {}
 bindedchannel = ""
 run = 0
+moneybet = 0
 
-async def roulette_thr(message):
+async def roulette_thr(message, cursor):
     if not message.author.id in bettedcolour and message.channel.id == bindedchannel:
         try:
             args = message.content.lower().split(" ")
             if args[0] == "bet":
+                cursor.execute(f"SELECT coins FROM users WHERE id = {message.author.id}")
+                result = cursor.fetchone()
+                coins = int(result[0])
+                if coins < moneybet:
+                    await message.channel.send("You do not have enough money to bet.")
+                    return
                 number = args[1]
                 colour = args[2]
                 bettednumber[message.author.id] = int(number)
                 bettedcolour[message.author.id] = colour
+                cursor.execute(f"UPDATE users SET coins = {coins-moneybet} WHERE id = {message.author.id}")
                 await message.channel.send(f"**{message.author.name}** placed on **{number} {colour}**")
                 await message.delete()
         except Exception as e:
             await message.channel.send(f"Error occured```{e}```")
     
-async def roulette(ctx):
+async def roulette(ctx, betmoney, cursor):
     global bindedchannel
     global run
+    global moneybet
     
     if run == 0:
+        moneybet = int(betmoney)
         run = 1
         seclefts = 15
-        msg = await ctx.send(f"Place your bets folks! You have **{seclefts}** seconds.\n`bet [1-36] [red/black]`")
+        msg = await ctx.send(f"Place your bets folks, hopefully you have **{moneybet} Levicoins**!\nYou have **{seclefts}** seconds.\n`bet [1-36] [red/black]`")
         bindedchannel = ctx.channel.id
         
         wincolour = random.choice(["black", "red"])
@@ -40,16 +50,22 @@ async def roulette(ctx):
             await asyncio.sleep(5)
             seclefts -= 5
             await msg.edit(content=f"Place your bets folks! You have **{seclefts}** seconds.")
+        await msg.edit(content="No more bets allowed.")
             
         
         winnercolour = [k for k, v in bettedcolour.items() if v == wincolour]
         winnernumber = [k for k, v in bettednumber.items() if v >= wininterval and v<=wininterval+5]
         winners = []
+        winnersids = []
         for userid in bettednumber:
             if userid in winnercolour and userid in winnernumber:
                 winners.append(ctx.message.guild.get_member(userid).name)
+                winnersids.append(userid)
         win_message = f"Won: **[{wininterval}-{wininterval+5}] {wincolour}**\n**Winners:** {', '.join(winners) if len(winners)>0 else 'no winners'}"
         await ctx.send(win_message)
+        if len(winnersids) > 0:
+            for id in winnersids:
+                cursor.execute(f"UPDATE users SET coins = {moneybet*10} WHERE id = {id}")
         bettedcolour.clear()
         bettednumber.clear()
         bindedchannel = ""
