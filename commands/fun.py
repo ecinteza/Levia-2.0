@@ -13,8 +13,8 @@ async def penis(ctx):
     bigchance = random.randint(1, 100)
     
     if bigchance > 0 and bigchance <= 2:
-        random.randint(36, 40)
-    if bigchance > 2 and bigchance <= 10:
+        length = random.randint(36, 40)
+    elif bigchance > 2 and bigchance <= 10:
         length = random.randint(30, 35)
     elif bigchance >10 and bigchance <= 30:
         length = random.randint(20, 29)
