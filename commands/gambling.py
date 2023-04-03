@@ -18,6 +18,10 @@ async def slots(ctx, betmoney, cursor):
             await ctx.send("You do not have enough money to bet.")
             return
         
+        if int(betmoney) <= 0:
+            await ctx.send("Omaga, you're not like other girls, are you?", reference = ctx.message)
+            return
+        
         cursor.execute(f"UPDATE users SET coins = {coins-int(betmoney)} WHERE id = {ctx.author.id}")
         
         untilGuaranteed += 1

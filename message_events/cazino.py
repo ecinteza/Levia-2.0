@@ -38,6 +38,11 @@ async def roulette(ctx, betmoney, cursor):
     
     if run == 0:
         moneybet = int(betmoney)
+        
+        if moneybet <= 0:
+            await ctx.send("Really?", reference = ctx.message)
+            return
+        
         run = 1
         seclefts = 15
         msg = await ctx.send(f"Place your bets folks, hopefully you have **{moneybet} Levicoins**!\nYou have **{seclefts}** seconds.\n`bet [1-36] [red/black]`")
