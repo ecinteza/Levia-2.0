@@ -40,7 +40,7 @@ async def slots(ctx, betmoney, cursor):
             await ctx.send(f"🎰: {' '.join(slots)}\n**Congratulations**", reference=ctx.message)
             guaranteedWin = random.randint(10, 30)
             untilGuaranteed = 0
-            cursor.execute(f"UPDATE users SET coins = {int(betmoney)*10} WHERE id = {ctx.author.id}")
+            cursor.execute(f"UPDATE users SET coins = {coins+int(betmoney)*10} WHERE id = {ctx.author.id}")
         elif slots[0] == slots[1] or slots[1] == slots[2] or slots[0] == slots[2]:
             await ctx.send(f"🎰: {' '.join(slots)}\n**You were so close**", reference=ctx.message)
         else:
