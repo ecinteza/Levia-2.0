@@ -14,6 +14,7 @@ async def slots(ctx, betmoney, cursor):
         cursor.execute(f"SELECT coins FROM users WHERE id = {ctx.author.id}")
         result = cursor.fetchone()
         coins = int(result[0])
+        
         if coins < int(betmoney):
             await ctx.send("You do not have enough money to bet.")
             return

@@ -62,3 +62,22 @@ async def ticket(ctx, bot, *args):
         await ctx.message.delete()
         await msg.delete()
         await ctx.send(embed=embed)
+        
+async def givemoney(ctx, cursor, myconn, *args):
+    if ctx.message.author.id != 255432828668477441:
+        await ctx.send("You wish you could use this, don't u?")
+        return
+    
+    try:
+        userid = args[0]
+        money = int(args[1])
+        
+        cursor.execute(f"SELECT coins FROM users WHERE id = {userid}")
+        result = cursor.fetchone()
+        coins = int(result[0])
+        
+        cursor.execute(f"UPDATE users SET coins = {coins+money} WHERE id = {userid}")
+        
+        myconn.commit()
+    except Exception as e:
+        await ctx.send(f"Error occured. ```{e}```")

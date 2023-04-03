@@ -339,6 +339,10 @@ async def fm(ctx, *args):
 async def ticket(ctx, *args):
     asyncio.get_event_loop().create_task(commands.admin.ticket(ctx, bot, *args))
     
+@bot.command(brief = "Give Levicoins [ADMIN ONLY]")
+async def givemoney(ctx, *args):
+    asyncio.get_event_loop().create_task(commands.admin.givemoney(ctx, cursor, myconn, *args))
+    
 with open('TOKENS.json') as f:
         data = json.load(f)
         bot.run(data[whotorun])

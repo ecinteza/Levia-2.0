@@ -70,7 +70,10 @@ async def roulette(ctx, betmoney, cursor):
         await ctx.send(win_message)
         if len(winnersids) > 0:
             for id in winnersids:
-                cursor.execute(f"UPDATE users SET coins = {moneybet*10} WHERE id = {id}")
+                cursor.execute(f"SELECT coins FROM users WHERE id = {id}")
+                result = cursor.fetchone()
+                coins = int(result[0])
+                cursor.execute(f"UPDATE users SET coins = {coins+moneybet*10} WHERE id = {id}")
         bettedcolour.clear()
         bettednumber.clear()
         bindedchannel = ""

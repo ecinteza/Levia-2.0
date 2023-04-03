@@ -12,6 +12,5 @@ with open('DB.json') as f:
         cursor = myconn.cursor()
         #cursor.execute("CREATE TABLE users (id INT PRIMARY KEY NOT NULL, coins INT NOT NULL)")
         #cursor.execute("CREATE TABLE users (id VARCHAR(255) PRIMARY KEY NOT NULL, coins INT NOT NULL)")
-        cursor.execute("SELECT * FROM users")
-        result = cursor.fetchall()
-        print(result)
+        cursor.execute(f"UPDATE users SET coins = 250 WHERE id = '301978946508161025'")
+        myconn.commit()
