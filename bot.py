@@ -87,6 +87,8 @@ async def on_member_remove(member):
     
     Logchannel = bot.get_channel(484331277164740620)
     await Logchannel.send(embed=embed)
+    Logchannel = bot.get_channel(719961466509328406)
+    await Logchannel.send(f"**{member.name}#{member.discriminator}** left us...")
     
 @bot.event
 async def on_message_edit(before, after):
@@ -116,14 +118,16 @@ async def on_message_delete(message):
                                      
                                      
 ############################################################################################################
-                             
+                      
 @bot.event  
 async def on_message(message):
     if message.author.bot or len(message.content) == 0:
         return
-    
-    asyncio.get_event_loop().create_task(message_events.makemoney.makemoney(message, cursor))
-    myconn.commit()
+    try:
+        asyncio.get_event_loop().create_task(message_events.makemoney.makemoney(message, cursor))
+        myconn.commit()
+    except:
+        await bot.get_channel(565602349679378433).send(f"<@255432828668477441> Database Disconnected.")
     
     # PROCESS COMMANDS
     if message.content.startswith(prefix):
@@ -140,7 +144,7 @@ async def on_message(message):
     asyncio.get_event_loop().create_task(message_events.mock.reply3(message))
     asyncio.get_event_loop().create_task(message_events.wordle.msg_wordle(message))
     asyncio.get_event_loop().create_task(message_events.mock.wys(message))
-    asyncio.get_event_loop().create_task(message_events.cazino.roulette_thr(message, cursor))
+    asyncio.get_event_loop().create_task(message_events.cazino.roulette_thr(message, cursor, bot))
     
 
 ###########

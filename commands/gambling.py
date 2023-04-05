@@ -29,6 +29,7 @@ async def slots(ctx, betmoney, cursor):
     
         slots = []
         if untilGuaranteed < guaranteedWin:
+            untilGuaranteed = 0
             for i in range(3):
                 slots.append(random.choice(fruits))
         else:
