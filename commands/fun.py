@@ -3,6 +3,20 @@ from wordhoard import Definitions
 import requests
 import json
 
+async def mock(ctx, *args):
+    if len(args) < 1:
+        await ctx.send("Mock what? lol")
+        return
+    msg = " ".join(args)
+    mockmsg = ""
+    for i in range(0, len(msg)):
+        if i%2==0:
+            mockmsg += msg[i].upper()
+        else:
+            mockmsg += msg[i].lower()
+    mockmsg += f"\n*(mocked by {ctx.author.name}#{ctx.author.discriminator})*"
+    await ctx.send(mockmsg)
+
 async def penis(ctx):
     peen = "8"
     
@@ -47,6 +61,43 @@ async def penis(ctx):
         peen = ""
     
     await ctx.send(mesaj + peen)
+    
+async def pussy(ctx):
+    pusay = "({"
+    
+    bigchance = random.randint(1, 100)
+    
+    if bigchance > 0 and bigchance <= 2:
+        length = random.randint(0, 9)
+    elif bigchance > 2 and bigchance <= 10:
+        length = random.randint(10, 19)
+    elif bigchance >10 and bigchance <= 30:
+        length = random.randint(20, 29)
+    elif bigchance >30 and bigchance <= 60:
+        length = random.randint(30, 35)
+    else:
+        length = random.randint(36, 40)
+    
+    for i in range(length):
+        pusay += " "
+    else:
+        pusay += "}) (" + str(length) + " cm)"
+    
+    mesaj = ""
+    if ctx.message.mentions:
+        mentioned = ctx.message.mentions[0]
+        mesaj = mentioned.name + "'s pusay is "
+    else:
+        mesaj = "Your pusay (" + ctx.author.name + ") is "
+        
+    if (length == 0):
+        if ctx.message.mentions:
+            mesaj = mentioned.name + " isn't dilated. Hah, Virgin."
+        else:
+            mesaj = "You aren't dilated, you virgin."
+        pusay = ""
+    
+    await ctx.send(mesaj + pusay)
 
 loveurself = [
     "Do that in your bed, not in public",

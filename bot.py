@@ -7,6 +7,7 @@ import asyncio
 from threading import Thread
 from datetime import datetime
 import mysql.connector
+import sys
 
 """
 intents = discord.Intents.default()
@@ -31,6 +32,8 @@ with open('TOKENS.json') as f:
 # RUN RUN RUN RUN
 whotorun = "bot"
 # beta / bot
+if sys.argv[1] == "beta":
+    whotorun = "beta"
 
 f = open('DB.json')
 data = json.load(f)
@@ -41,6 +44,7 @@ myconn = mysql.connector.connect(host = data["endpoint"],
                                 database = data["database"])
 cursor = myconn.cursor()
 print("Connected to the levicoins database")
+dbconnected = 1
 f.close()
 
 intents = discord.Intents.all()
@@ -107,6 +111,7 @@ async def on_message_edit(before, after):
 async def on_message_delete(message):
     if message.author.bot: return
     if message.content.startswith(prefix): return
+    if message.content.startsWith("bet"): return
     
     embed = discord.Embed(title = f"Message deleted in #{message.channel.name} ({message.id})",
                           description = f"**{message.content}**",
@@ -121,13 +126,30 @@ async def on_message_delete(message):
                       
 @bot.event  
 async def on_message(message):
+    global dbconnected
+    global myconn
+    global cursor
+    
     if message.author.bot or len(message.content) == 0:
         return
-    try:
-        asyncio.get_event_loop().create_task(message_events.makemoney.makemoney(message, cursor, bot))
-        myconn.commit()
-    except:
-        await bot.get_channel(565602349679378433).send(f"<@255432828668477441> Database Disconnected.")
+    if dbconnected == 1 and whotorun == "bot":
+        try:
+            asyncio.get_event_loop().create_task(message_events.makemoney.makemoney(message, cursor, bot))
+            myconn.commit()
+        except:
+            dbconnected = 0
+            try:
+                myconn = mysql.connector.connect(host = data["endpoint"],
+                                    port = data["port"],
+                                    user = data["username"],
+                                    password = data["password"],
+                                    database = data["database"])
+                cursor = myconn.cursor()
+                dbconnected = 1
+            except:
+                dbconnected = 0
+                await message.channel.send("Levicoins Database disconnected and retrying failed. Please contact my Admin.")
+            
     
     # PROCESS COMMANDS
     if message.content.startswith(prefix):
@@ -180,6 +202,10 @@ import commands.coins
 @bot.command(brief = "See how much levicoins you have", aliases = ["bal"])
 async def balance(ctx):
     asyncio.get_event_loop().create_task(commands.coins.balance(ctx, myconn, cursor))
+    
+@bot.command(brief = "Donate money to someone")
+async def donate(ctx, arg):
+    asyncio.get_event_loop().create_task(commands.coins.donate(ctx, arg, myconn, cursor))
 ###################################################################
 
 ###################################################################
@@ -250,9 +276,18 @@ import commands.fun
 async def penis(ctx):
     asyncio.get_event_loop().create_task(commands.fun.penis(ctx))
     
+@bot.command(brief = "Let's see how dilated you are",
+             aliases = ["pusay", "pizda"])
+async def pussy(ctx):
+    asyncio.get_event_loop().create_task(commands.fun.pussy(ctx))
+    
 @bot.command(brief = "see how much u are compatible w someone")
 async def love(ctx, *args):
     asyncio.get_event_loop().create_task(commands.fun.love(ctx, *args))
+    
+@bot.command(brief = "See a message how it'd look mocked")
+async def mock(ctx, *args):
+    asyncio.get_event_loop().create_task(commands.fun.mock(ctx, *args))
 
 @bot.command(brief = "see how much u hate someone")
 async def hate(ctx, *args):

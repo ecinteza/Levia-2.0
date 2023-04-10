@@ -38,13 +38,14 @@ async def slots(ctx, betmoney, cursor):
                 slots.append(fru)
             
         if slots[0] == slots[1] and slots[1] == slots[2]:
-            await ctx.send(f"🎰: {' '.join(slots)}\n**Congratulations**", reference=ctx.message)
+            await ctx.send(f"🎰: {' '.join(slots)}\n**Congratulations (x10)**", reference=ctx.message)
             guaranteedWin = random.randint(10, 30)
             untilGuaranteed = 0
             cursor.execute(f"UPDATE users SET coins = {coins+int(betmoney)*10} WHERE id = {ctx.author.id}")
         elif slots[0] == slots[1] or slots[1] == slots[2] or slots[0] == slots[2]:
-            await ctx.send(f"🎰: {' '.join(slots)}\n**You were so close**", reference=ctx.message)
+            await ctx.send(f"🎰: {' '.join(slots)}\n**You were so close (x2)**", reference=ctx.message)
+            cursor.execute(f"UPDATE users SET coins = {coins+int(betmoney)*2} WHERE id = {ctx.author.id}")
         else:
-            await ctx.send(f"🎰: {' '.join(slots)}\n**Maybe next time**", reference=ctx.message)
+            await ctx.send(f"🎰: {' '.join(slots)}\n**Maybe next time (LOSS)**", reference=ctx.message)
     except Exception as e:
         await ctx.send(f"Error occured. ```{e}```")
