@@ -32,8 +32,9 @@ with open('TOKENS.json') as f:
 # RUN RUN RUN RUN
 whotorun = "bot"
 # beta / bot
-if sys.argv[1] == "beta":
-    whotorun = "beta"
+if len(sys.argv) == 2:
+    if sys.argv[1] == "beta":
+        whotorun = "beta"
 
 f = open('DB.json')
 data = json.load(f)
@@ -220,7 +221,7 @@ async def donate(ctx, arg):
 ###################################################################    
 @bot.command(brief = "Client Version")
 async def version(ctx):
-    await ctx.send("xLevia v2.3")
+    await ctx.send("xLevia v2.5")
 
 import commands.basics                                            
 @bot.command(brief = "Pong")                                      
