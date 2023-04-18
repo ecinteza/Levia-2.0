@@ -111,7 +111,7 @@ async def on_message_edit(before, after):
 @bot.event
 async def on_message_delete(message):
     if message.author.bot: return
-    if message.content.startswith(prefix): return
+    if message.content.startsWith(prefix): return
     if message.content.startsWith("bet"): return
     
     embed = discord.Embed(title = f"Message deleted in #{message.channel.name} ({message.id})",
