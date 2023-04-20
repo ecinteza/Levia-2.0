@@ -1,5 +1,5 @@
 import random
-from commands.utils import remove_mentions
+from commands.utils import remove_mentions, detect_link
 # ignoring warning because it actually works
 
 replyusers = []
@@ -31,6 +31,8 @@ async def reply3(message):
         
 async def mocking(message):
     if message.channel.id == 1089635395278475295: return
+    if detect_link(message) == True: return
+    
     
     mock = random.randint(1, 100)
 

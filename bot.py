@@ -8,7 +8,7 @@ from threading import Thread
 from datetime import datetime
 import mysql.connector
 import sys
-
+from commands.utils import detect_link
 """
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
@@ -111,8 +111,8 @@ async def on_message_edit(before, after):
 @bot.event
 async def on_message_delete(message):
     if message.author.bot: return
-    if message.content.startsWith(prefix): return
-    if message.content.startsWith("bet"): return
+    if message.content.startswith(prefix): return
+    if message.content.startswith("bet"): return
     
     embed = discord.Embed(title = f"Message deleted in #{message.channel.name} ({message.id})",
                           description = f"**{message.content}**",
@@ -133,11 +133,19 @@ async def on_message(message):
     
     if message.author.bot or len(message.content) == 0:
         return
+    
+    role = discord.utils.get(message.guild.roles, id=579691573135147020)
+    if role not in message.author.roles and detect_link(message) == True:
+        await message.delete()
+        return
+    
     if dbconnected == 1 and whotorun == "bot":
         try:
             asyncio.get_event_loop().create_task(message_events.makemoney.makemoney(message, cursor, bot))
             myconn.commit()
         except:
+            cursor.close()
+            myconn.close()
             dbconnected = 0
             try:
                 myconn = mysql.connector.connect(host = data["endpoint"],

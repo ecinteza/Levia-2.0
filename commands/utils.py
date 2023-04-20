@@ -18,3 +18,12 @@ def remove_mentions(mesaj):
         mesaj = mesaj.replace("  ", " ")
         
     return mesaj
+
+import validators
+
+def detect_link(mesaj):
+    for word in mesaj.content.split(" "):
+        valid = validators.url(word)
+        if valid==True:
+            return True
+    return False
