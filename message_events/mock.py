@@ -34,7 +34,7 @@ async def mocking(message):
     if detect_link(message) == True: return
     
     
-    mock = random.randint(1, 100)
+    mock = random.randint(1, 200)
 
     mockmsg = ""
     if mock==1:
