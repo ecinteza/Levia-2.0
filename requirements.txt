@@ -3,3 +3,4 @@ wordhoard
 mysql.connector
 asyncio
 requests
+validators
