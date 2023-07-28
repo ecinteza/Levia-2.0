@@ -36,18 +36,6 @@ if len(sys.argv) == 2:
     if sys.argv[1] == "beta":
         whotorun = "beta"
 
-f = open('DB.json')
-data = json.load(f)
-myconn = mysql.connector.connect(host = data["endpoint"],
-                                port = data["port"],
-                                user = data["username"],
-                                password = data["password"],
-                                database = data["database"])
-cursor = myconn.cursor()
-print("Connected to the levicoins database")
-dbconnected = 1
-f.close()
-
 intents = discord.Intents.all()
 intents.message_content = True
 intents.members = True
@@ -133,32 +121,13 @@ async def on_message(message):
     
     if message.author.bot or len(message.content) == 0:
         return
+
+    asyncio.get_event_loop().create_task(message_events.makemoney.makemoney(message, bot))
     
     role = discord.utils.get(message.guild.roles, id=579691573135147020)
     if role not in message.author.roles and detect_link(message) == True:
         await message.delete()
         return
-    
-    if dbconnected == 1 and whotorun == "bot":
-        try:
-            asyncio.get_event_loop().create_task(message_events.makemoney.makemoney(message, cursor, bot))
-            myconn.commit()
-        except:
-            cursor.close()
-            myconn.close()
-            dbconnected = 0
-            try:
-                myconn = mysql.connector.connect(host = data["endpoint"],
-                                    port = data["port"],
-                                    user = data["username"],
-                                    password = data["password"],
-                                    database = data["database"])
-                cursor = myconn.cursor()
-                dbconnected = 1
-            except:
-                dbconnected = 0
-                await message.channel.send("Levicoins Database disconnected and retrying failed. Please contact my Admin.")
-            
     
     # PROCESS COMMANDS
     if message.content.startswith(prefix):
@@ -175,7 +144,7 @@ async def on_message(message):
     asyncio.get_event_loop().create_task(message_events.mock.reply3(message))
     asyncio.get_event_loop().create_task(message_events.wordle.msg_wordle(message))
     asyncio.get_event_loop().create_task(message_events.mock.wys(message))
-    asyncio.get_event_loop().create_task(message_events.cazino.roulette_thr(message, cursor))
+    asyncio.get_event_loop().create_task(message_events.cazino.roulette_thr(message))
     
 
 ###########
@@ -184,13 +153,13 @@ async def on_message(message):
 
 @bot.command(brief = "Roulette")
 async def roulette(ctx, betmoney):
-    asyncio.get_event_loop().create_task(message_events.cazino.roulette(ctx, betmoney, cursor))
+    asyncio.get_event_loop().create_task(message_events.cazino.roulette(ctx, betmoney))
     
 import commands.gambling
 
 @bot.command(brief = "Slots")
 async def slots(ctx, betmoney):
-    asyncio.get_event_loop().create_task(commands.gambling.slots(ctx, betmoney, cursor))
+    asyncio.get_event_loop().create_task(commands.gambling.slots(ctx, betmoney))
 
 #######################################################
 #   IDK                                               
@@ -210,11 +179,11 @@ async def wordle(ctx, *args):
 import commands.coins
 @bot.command(brief = "See how much levicoins you have", aliases = ["bal"])
 async def balance(ctx):
-    asyncio.get_event_loop().create_task(commands.coins.balance(ctx, myconn, cursor))
+    asyncio.get_event_loop().create_task(commands.coins.balance(ctx))
     
 @bot.command(brief = "Donate money to someone")
 async def donate(ctx, arg):
-    asyncio.get_event_loop().create_task(commands.coins.donate(ctx, arg, myconn, cursor))
+    asyncio.get_event_loop().create_task(commands.coins.donate(ctx, arg))
 ###################################################################
 
 ###################################################################
@@ -389,9 +358,9 @@ async def ticket(ctx, *args):
     
 @bot.command(brief = "Give Levicoins [ADMIN ONLY]")
 async def givemoney(ctx, *args):
-    asyncio.get_event_loop().create_task(commands.admin.givemoney(ctx, cursor, myconn, *args))
+    asyncio.get_event_loop().create_task(commands.admin.givemoney(ctx, *args))
     
-with open('TOKENS.json') as f:
+with open('./json/TOKENS.json') as f:
         data = json.load(f)
         bot.run(data[whotorun])
         

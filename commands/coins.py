@@ -1,9 +1,18 @@
-import discord
-from datetime import datetime
 import json
 import mysql.connector
 
-async def balance(ctx, myconn, cursor):
+# CREATE TABLE users(id varchar(255), coins int)
+
+async def balance(ctx):
+    f = open('./json/DB.json')
+    data = json.load(f)
+    myconn = mysql.connector.connect(host = data["endpoint"],
+                                    port = data["port"],
+                                    user = data["username"],
+                                    password = data["password"],
+                                    database = data["database"])
+    cursor = myconn.cursor()
+
     cursor.execute(f"SELECT * FROM users WHERE id = {ctx.author.id}")
     result = cursor.fetchall()
     if (len(result)==0):
@@ -13,10 +22,23 @@ async def balance(ctx, myconn, cursor):
         cursor.execute(f"SELECT coins FROM users WHERE id = {ctx.author.id}")
         result = cursor.fetchone()
         await ctx.send("You have exactly **" + str(result[0]) + " Levicoins**.", reference = ctx.message)
+
     myconn.commit()
+    cursor.close()
+    myconn.close()
+    f.close()
     
-async def donate(ctx, howmuch, myconn, cursor):
+async def donate(ctx, howmuch):
     try:
+        f = open('./json/DB.json')
+        data = json.load(f)
+        myconn = mysql.connector.connect(host = data["endpoint"],
+                                        port = data["port"],
+                                        user = data["username"],
+                                        password = data["password"],
+                                        database = data["database"])
+        cursor = myconn.cursor()
+
         cursor.execute(f"SELECT coins FROM users WHERE id = {ctx.author.id}")
         result = cursor.fetchone()
         yourcoins = int(result[0])
@@ -44,5 +66,10 @@ async def donate(ctx, howmuch, myconn, cursor):
                 await ctx.send(f"Donated **{howmuch}** levicoins to **{mentioned.name}**")
         else:
             await ctx.send("Donate to who? me?")
+
+        myconn.commit()
+        cursor.close()
+        myconn.close()
+        f.close()
     except Exception as e:
         await ctx.send(f"This went horribly... ```{e}```")

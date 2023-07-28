@@ -1,4 +1,6 @@
 import random
+import mysql.connector
+import json
 
 guaranteedWin = random.randint(10, 30)
 untilGuaranteed = 0
@@ -6,7 +8,16 @@ fruits = ['🍎', '🍊', '🍋',
           '🍌', '🍓', '🍒',
           '🍑', '🍍', '🥥']
 
-async def slots(ctx, betmoney, cursor):
+async def slots(ctx, betmoney):
+    f = open('./json/DB.json')
+    data = json.load(f)
+    myconn = mysql.connector.connect(host = data["endpoint"],
+                                    port = data["port"],
+                                    user = data["username"],
+                                    password = data["password"],
+                                    database = data["database"])
+    cursor = myconn.cursor()
+
     global guaranteedWin
     global untilGuaranteed
     
@@ -49,3 +60,8 @@ async def slots(ctx, betmoney, cursor):
             await ctx.send(f"🎰: {' '.join(slots)}\n**Maybe next time (LOSS)**", reference=ctx.message)
     except Exception as e:
         await ctx.send(f"Error occured. ```{e}```")
+
+    myconn.commit()
+    cursor.close()
+    myconn.close()
+    f.close()

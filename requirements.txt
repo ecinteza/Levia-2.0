@@ -1,0 +1,5 @@
+discord
+wordhoard
+mysql.connector
+asyncio
+requests
