@@ -1,7 +1,5 @@
 import discord
 from datetime import datetime
-import json
-import mysql.connector
 
 async def fm(ctx, bot, *args):
     if ctx.message.author.id != 255432828668477441:
@@ -65,15 +63,7 @@ async def ticket(ctx, bot, *args):
         await msg.delete()
         await ctx.send(embed=embed)
         
-async def givemoney(ctx, *args):
-    f = open('./json/DB.json')
-    data = json.load(f)
-    myconn = mysql.connector.connect(host = data["endpoint"],
-                                    port = data["port"],
-                                    user = data["username"],
-                                    password = data["password"],
-                                    database = data["database"])
-    cursor = myconn.cursor()
+async def givemoney(ctx, cursor, *args):
 
     if ctx.message.author.id != 255432828668477441:
         await ctx.send("You wish you could use this, don't u?")
@@ -88,12 +78,5 @@ async def givemoney(ctx, *args):
         coins = int(result[0])
         
         cursor.execute(f"UPDATE users SET coins = {coins+money} WHERE id = {userid}")
-        
-        myconn.commit()
     except Exception as e:
         await ctx.send(f"Error occured. ```{e}```")
-
-    myconn.commit()
-    cursor.close()
-    myconn.close()
-    f.close()

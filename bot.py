@@ -2,12 +2,11 @@ import discord
 from discord.ext import commands
 #from discord import app_commands
 import json
-import time
 import asyncio
-from threading import Thread
 from datetime import datetime
 import mysql.connector
 import sys
+import time
 from commands.utils import detect_link
 """
 intents = discord.Intents.default()
@@ -52,12 +51,49 @@ bot = commands.Bot(command_prefix=prefix,
                    activity=discord.Activity(type=discord.ActivityType.listening, name=botactivity))
 
 ##################################
+#     DATABASE
+f = open('./json/DB.json')
+_data = json.load(f)
+f.close()
+myconn = mysql.connector.connect(host = _data["endpoint"],
+                                port = _data["port"],
+                                user = _data["username"],
+                                password = _data["password"],
+                                database = _data["database"])
+cursor = myconn.cursor()
+
+async def periodicReloadDB():
+    print("Reloading db in 1h")
+    await asyncio.sleep(3600)
+    
+    global myconn
+    global cursor
+    global _data
+
+    cursor.close()
+    myconn.close()
+    
+    myconn = mysql.connector.connect(host = _data["endpoint"],
+                                port = _data["port"],
+                                user = _data["username"],
+                                password = _data["password"],
+                                database = _data["database"])
+    cursor = myconn.cursor()
+
+##################################
+
+##################################
 #     EVENTS                     
 import message_events.mock       
 import message_events.wordle     
 import message_events.cazino     
 import message_events.makemoney
 ##################################
+
+@bot.event
+async def on_ready():
+    await bot.get_channel(719961466509328406).send("I'm bacc")
+    asyncio.get_event_loop().create_task(periodicReloadDB())
 
 @bot.event
 async def on_member_join(member):
@@ -115,14 +151,10 @@ async def on_message_delete(message):
                       
 @bot.event  
 async def on_message(message):
-    global dbconnected
-    global myconn
-    global cursor
-    
     if message.author.bot or len(message.content) == 0:
         return
 
-    asyncio.get_event_loop().create_task(message_events.makemoney.makemoney(message, bot))
+    asyncio.get_event_loop().create_task(message_events.makemoney.makemoney(message, bot, cursor))
     
     role = discord.utils.get(message.guild.roles, id=579691573135147020)
     if role not in message.author.roles and detect_link(message) == True:
@@ -144,7 +176,9 @@ async def on_message(message):
     asyncio.get_event_loop().create_task(message_events.mock.reply3(message))
     asyncio.get_event_loop().create_task(message_events.wordle.msg_wordle(message))
     asyncio.get_event_loop().create_task(message_events.mock.wys(message))
-    asyncio.get_event_loop().create_task(message_events.cazino.roulette_thr(message))
+    asyncio.get_event_loop().create_task(message_events.cazino.roulette_thr(message, cursor))
+
+    myconn.commit()
     
 
 ###########
@@ -153,13 +187,13 @@ async def on_message(message):
 
 @bot.command(brief = "Roulette")
 async def roulette(ctx, betmoney):
-    asyncio.get_event_loop().create_task(message_events.cazino.roulette(ctx, betmoney))
+    asyncio.get_event_loop().create_task(message_events.cazino.roulette(ctx, betmoney, cursor))
     
 import commands.gambling
 
 @bot.command(brief = "Slots")
 async def slots(ctx, betmoney):
-    asyncio.get_event_loop().create_task(commands.gambling.slots(ctx, betmoney))
+    asyncio.get_event_loop().create_task(commands.gambling.slots(ctx, betmoney, cursor))
 
 #######################################################
 #   IDK                                               
@@ -179,11 +213,11 @@ async def wordle(ctx, *args):
 import commands.coins
 @bot.command(brief = "See how much levicoins you have", aliases = ["bal"])
 async def balance(ctx):
-    asyncio.get_event_loop().create_task(commands.coins.balance(ctx))
+    asyncio.get_event_loop().create_task(commands.coins.balance(ctx, cursor))
     
 @bot.command(brief = "Donate money to someone")
 async def donate(ctx, arg):
-    asyncio.get_event_loop().create_task(commands.coins.donate(ctx, arg))
+    asyncio.get_event_loop().create_task(commands.coins.donate(ctx, arg, cursor))
 ###################################################################
 
 ###################################################################
@@ -358,7 +392,7 @@ async def ticket(ctx, *args):
     
 @bot.command(brief = "Give Levicoins [ADMIN ONLY]")
 async def givemoney(ctx, *args):
-    asyncio.get_event_loop().create_task(commands.admin.givemoney(ctx, *args))
+    asyncio.get_event_loop().create_task(commands.admin.givemoney(ctx, cursor, *args))
     
 with open('./json/TOKENS.json') as f:
         data = json.load(f)

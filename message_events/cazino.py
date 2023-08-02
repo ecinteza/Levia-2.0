@@ -1,7 +1,5 @@
 import asyncio
 import random
-import json
-import mysql.connector
 # 18 RED, 18 BLACK
 
 bettedcolour = {}
@@ -10,16 +8,7 @@ bindedchannel = ""
 run = 0
 moneybet = 0
 
-async def roulette_thr(message):
-    f = open('./json/DB.json')
-    data = json.load(f)
-    myconn = mysql.connector.connect(host = data["endpoint"],
-                                    port = data["port"],
-                                    user = data["username"],
-                                    password = data["password"],
-                                    database = data["database"])
-    cursor = myconn.cursor()
-
+async def roulette_thr(message, cursor):
     if not message.author.id in bettedcolour and message.channel.id == bindedchannel:
         try:
             args = message.content.lower().split(" ")
@@ -39,27 +28,13 @@ async def roulette_thr(message):
                 await message.delete()
         except Exception as e:
             await message.channel.send(f"Error occured```{e}```")
-
-    myconn.commit()
-    cursor.close()
-    myconn.close()
-    f.close()
     
-async def roulette(ctx, betmoney):
+async def roulette(ctx, betmoney, cursor):
     global bindedchannel
     global run
     global moneybet
     
     if run == 0:
-
-        f = open('./json/DB.json')
-        data = json.load(f)
-        myconn = mysql.connector.connect(host = data["endpoint"],
-                                        port = data["port"],
-                                        user = data["username"],
-                                        password = data["password"],
-                                        database = data["database"])
-        cursor = myconn.cursor()
         moneybet = int(betmoney)
         
         if moneybet <= 0:
@@ -101,11 +76,6 @@ async def roulette(ctx, betmoney):
         bettednumber.clear()
         bindedchannel = ""
         run = 0
-
-        myconn.commit()
-        cursor.close()
-        myconn.close()
-        f.close()
     else:
         await ctx.send("Game already commencing.")
     

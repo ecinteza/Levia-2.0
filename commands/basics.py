@@ -4,8 +4,6 @@ from colorthief import ColorThief
 import requests
 import discord
 import random
-import aiohttp
-from discord import Webhook
 from datetime import datetime
 import time
 

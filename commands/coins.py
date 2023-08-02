@@ -1,18 +1,6 @@
-import json
-import mysql.connector
-
 # CREATE TABLE users(id varchar(255), coins int)
 
-async def balance(ctx):
-    f = open('./json/DB.json')
-    data = json.load(f)
-    myconn = mysql.connector.connect(host = data["endpoint"],
-                                    port = data["port"],
-                                    user = data["username"],
-                                    password = data["password"],
-                                    database = data["database"])
-    cursor = myconn.cursor()
-
+async def balance(ctx, cursor):
     cursor.execute(f"SELECT * FROM users WHERE id = {ctx.author.id}")
     result = cursor.fetchall()
     if (len(result)==0):
@@ -22,23 +10,9 @@ async def balance(ctx):
         cursor.execute(f"SELECT coins FROM users WHERE id = {ctx.author.id}")
         result = cursor.fetchone()
         await ctx.send("You have exactly **" + str(result[0]) + " Levicoins**.", reference = ctx.message)
-
-    myconn.commit()
-    cursor.close()
-    myconn.close()
-    f.close()
     
-async def donate(ctx, howmuch):
+async def donate(ctx, howmuch, cursor):
     try:
-        f = open('./json/DB.json')
-        data = json.load(f)
-        myconn = mysql.connector.connect(host = data["endpoint"],
-                                        port = data["port"],
-                                        user = data["username"],
-                                        password = data["password"],
-                                        database = data["database"])
-        cursor = myconn.cursor()
-
         cursor.execute(f"SELECT coins FROM users WHERE id = {ctx.author.id}")
         result = cursor.fetchone()
         yourcoins = int(result[0])
@@ -62,14 +36,8 @@ async def donate(ctx, howmuch):
                 theircoins = int(result[0])
                 cursor.execute(f"UPDATE users SET coins = {theircoins+howmuch} WHERE id = {mentioned.id}")
                 cursor.execute(f"UPDATE users SET coins = {yourcoins-howmuch} WHERE id = {ctx.author.id}")
-                myconn.commit()
                 await ctx.send(f"Donated **{howmuch}** levicoins to **{mentioned.name}**")
         else:
             await ctx.send("Donate to who? me?")
-
-        myconn.commit()
-        cursor.close()
-        myconn.close()
-        f.close()
     except Exception as e:
         await ctx.send(f"This went horribly... ```{e}```")
