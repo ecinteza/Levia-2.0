@@ -79,6 +79,8 @@ async def periodicReloadDB():
                                 password = _data["password"],
                                 database = _data["database"])
     cursor = myconn.cursor()
+    
+    asyncio.get_event_loop().create_task(periodicReloadDB())
 
 ##################################
 
