@@ -237,16 +237,10 @@ async def wordle(ctx, *args):
             await ctx.send("Word: **" + wordconstruct + "**\nLetters: **" + str(len(wordconstruct)) + "**")
             if guesshardcore == 1:
                 try:
-                    search = correct_word
-                    definition = Definitions(search)
-                    defs = definition.find_definitions()
-                    if "38;2;255;255;255m" in str(defs):
-                        data = json.loads(commands.fun.loadwordurban(correct_word))
-                        msg = data["list"][random.randint(0, len(data["list"])-1)]['definition']
-                        msg = msg.replace("[", "**[").replace("]", "]**")
-                        await ctx.send(msg)
-                    else:
-                        await ctx.send(str(defs).replace("[", "").replace("]", "").replace("'", "").replace("'", ""), reference=ctx.message)
+                    data = json.loads(commands.fun.loadwordurban(correct_word))
+                    msg = data["list"][random.randint(0, len(data["list"])-1)]['definition']
+                    msg = msg.replace("[", "**[").replace("]", "]**")
+                    await ctx.send(msg)
                 except Exception as e:
                     await ctx.send(f"Some error occured... ```{e}```")
                 
