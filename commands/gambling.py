@@ -12,9 +12,13 @@ async def slots(ctx, betmoney, cursor):
     global untilGuaranteed
     
     try:
+
         cursor.execute(f"SELECT coins FROM users WHERE id = {ctx.author.id}")
         result = cursor.fetchone()
         coins = int(result[0])
+
+        if betmoney.lower() == "all":
+            betmoney = coins
         
         if coins < int(betmoney):
             await ctx.send("You do not have enough money to bet.")
