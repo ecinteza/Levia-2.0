@@ -61,9 +61,10 @@ myconn = mysql.connector.connect(host = _data["endpoint"],
                                 password = _data["password"],
                                 database = _data["database"])
 cursor = myconn.cursor()
+print("Database Connected")
+print(myconn)
 
 async def periodicReloadDB():
-    print("Reloading db in 1h")
     await asyncio.sleep(3600)
     
     global myconn
@@ -79,6 +80,9 @@ async def periodicReloadDB():
                                 password = _data["password"],
                                 database = _data["database"])
     cursor = myconn.cursor()
+    
+    print("Database Connection Refreshed")
+    print(myconn)
     
     asyncio.get_event_loop().create_task(periodicReloadDB())
 
