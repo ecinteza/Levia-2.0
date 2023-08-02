@@ -12,7 +12,6 @@ async def slots(ctx, betmoney, cursor):
     global untilGuaranteed
     
     try:
-
         cursor.execute(f"SELECT coins FROM users WHERE id = {ctx.author.id}")
         result = cursor.fetchone()
         coins = int(result[0])
@@ -34,10 +33,10 @@ async def slots(ctx, betmoney, cursor):
     
         slots = []
         if untilGuaranteed < guaranteedWin:
-            untilGuaranteed = 0
             for i in range(3):
                 slots.append(random.choice(fruits))
         else:
+            untilGuaranteed = 0
             fru = random.choice(fruits)
             for i in range(3):
                 slots.append(fru)

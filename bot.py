@@ -6,8 +6,8 @@ import asyncio
 from datetime import datetime
 import mysql.connector
 import sys
-import time
 from commands.utils import detect_link
+
 """
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
