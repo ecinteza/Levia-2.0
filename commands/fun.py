@@ -14,7 +14,7 @@ async def mock(ctx, *args):
             mockmsg += msg[i].upper()
         else:
             mockmsg += msg[i].lower()
-    mockmsg += f"\n*(mocked by {ctx.author.name}#{ctx.author.discriminator})*"
+    mockmsg += f"\n*(mocked by {ctx.author.name})*"
     await ctx.send(mockmsg)
 
 async def penis(ctx):
