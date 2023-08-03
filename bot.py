@@ -98,7 +98,7 @@ import message_events.makemoney
 
 @bot.event
 async def on_ready():
-    await bot.get_channel(719961466509328406).send("I'm bacc")
+    await bot.get_channel(719961466509328406).send("im bacc")
     asyncio.get_event_loop().create_task(periodicReloadDB())
 
 @bot.event
@@ -238,7 +238,7 @@ async def donate(ctx, arg):
 ###################################################################    
 @bot.command(brief = "Client Version")
 async def version(ctx):
-    await ctx.send("xLevia v2.5")
+    await ctx.send("xLevia v2.6")
 
 import commands.basics                                            
 @bot.command(brief = "Pong")                                      
