@@ -147,15 +147,16 @@ async def smash(ctx, *args):
     whatkind = ["smash", "sex", "boner", "ass", "butt", "submissive", "domination",
                 "breed", "threesome", "foursome", "orgy", "hentai", "gay", "yaoi",
                 "lesbian", "hit", "hitting", "punch", "punching", "kick", "destroy",
-                "obliterate", "annihilate", "kill", "unalive", "dead", "grave"]
+                "obliterate", "annihilate", "kill", "unalive", "dead", "grave", "kiss",
+                "lick", "touch", "throw", "anger", "angry", "knife", "stab"]
     gif = get_gif(random.choice(whatkind))
 
     if len(ctx.message.mentions) == 1:
         mentioned = ctx.message.mentions[0]
         if str(mentioned.id) != '413335791272460288':
             if mentioned.id == ctx.author.id:
-                await ctx.channel.send("If you're THIS lonely, I'll smash pity you ig", reference=ctx.message)
-                await ctx.channel.send(gif)
+                await ctx.channel.send("If you're THIS lonely, I'll pity smash you ig", reference=ctx.message)
+                await ctx.channel.send(get_gif("pity"))
             else:
                 smashmsg = "**" + ctx.author.name + "** smashed **" + mentioned.name + "**"
                 await ctx.channel.send(smashmsg)
