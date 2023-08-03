@@ -154,7 +154,7 @@ async def smash(ctx, *args):
                 await ctx.channel.send("If you're THIS lonely, I'll smash pity you ig", reference=ctx.message)
                 await ctx.channel.send(gif)
             else:
-                smashmsg = ctx.author.name + " smashed " + mentioned.name
+                smashmsg = "**" + ctx.author.name + "** smashed **" + mentioned.name + "**"
                 await ctx.channel.send(smashmsg)
                 await ctx.channel.send(gif)
         else:
@@ -163,13 +163,13 @@ async def smash(ctx, *args):
         mentioned = ctx.message.mentions[0]
         mentioned_inlove = ctx.message.mentions[1]
         
-        smashmsg = mentioned.name + " smashed " + mentioned_inlove.name
+        smashmsg = "**" + mentioned.name + "** smashed **" + mentioned_inlove.name + "**"
         await ctx.channel.send(smashmsg)
         await ctx.channel.send(gif)
     else:
         if len(args) > 0:
             arguments = " ".join(args)
-            smashmsg = ctx.author.name + " smashed " + arguments
+            smashmsg = "**" + ctx.author.name + "** smashed **" + arguments + "**"
             await ctx.channel.send(smashmsg)
             await ctx.channel.send(gif)
         else:

@@ -5,4 +5,3 @@ asyncio
 requests
 validators
 colorthief
-gifpy
