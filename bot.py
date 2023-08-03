@@ -98,8 +98,9 @@ import message_events.makemoney
 
 @bot.event
 async def on_ready():
-    await bot.get_channel(719961466509328406).send("im bacc")
-    asyncio.get_event_loop().create_task(periodicReloadDB())
+    if bot.user.id == 413335791272460288:
+        await bot.get_channel(719961466509328406).send("im bacc")
+        asyncio.get_event_loop().create_task(periodicReloadDB())
 
 @bot.event
 async def on_member_join(member):
@@ -310,6 +311,10 @@ async def mock(ctx, *args):
 @bot.command(brief = "see how much u hate someone")
 async def hate(ctx, *args):
     asyncio.get_event_loop().create_task(commands.fun.hate(ctx, *args))
+
+@bot.command(brief = "smash someone")
+async def smash(ctx, *args):
+    asyncio.get_event_loop().create_task(commands.fun.smash(ctx, *args))
 
 @bot.command(brief = "Search for words in the dictionary")
 async def dict(ctx, *args):

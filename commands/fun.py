@@ -103,6 +103,7 @@ loveurself = [
     "Do that in your bed, not in public",
     "Wow, you're so narcissistic..."
 ]
+
 async def love(ctx, *args):
     if len(ctx.message.mentions) == 1:
         mentioned = ctx.message.mentions[0]
@@ -130,6 +131,49 @@ async def love(ctx, *args):
             await ctx.channel.send(lovemsg)
         else:
             await ctx.channel.send("Are you that lonely?")
+
+def get_gif(searchTerm):  
+    f = open('./json/TOKENS.json')
+    Tokens = json.load(f)
+    f.close()
+
+    response = requests.get(f"https://g.tenor.com/v2/search?q={searchTerm}&key={Tokens['tenorapi']}&client_key=Levia&limit=50")
+    data = response.json()
+        
+    gif = random.choice(data["results"])
+    return gif['media_formats']['gif']['url']
+
+async def smash(ctx, *args):
+    whatkind = ["smash", "sex", "boner", "destroy"]
+    gif = get_gif(random.choice(whatkind))
+
+    if len(ctx.message.mentions) == 1:
+        mentioned = ctx.message.mentions[0]
+        if str(mentioned.id) != '413335791272460288':
+            if mentioned.id == ctx.author.id:
+                await ctx.channel.send("If you're THIS lonely, I'll smash pity you ig", reference=ctx.message)
+                await ctx.channel.send(gif)
+            else:
+                smashmsg = ctx.author.name + " smashed " + mentioned.name
+                await ctx.channel.send(smashmsg)
+                await ctx.channel.send(gif)
+        else:
+            await ctx.channel.send("Nu-huh.")
+    elif len(ctx.message.mentions) == 2:
+        mentioned = ctx.message.mentions[0]
+        mentioned_inlove = ctx.message.mentions[1]
+        
+        smashmsg = mentioned.name + " smashed " + mentioned_inlove.name
+        await ctx.channel.send(smashmsg)
+        await ctx.channel.send(gif)
+    else:
+        if len(args) > 0:
+            arguments = " ".join(args)
+            smashmsg = ctx.author.name + " smashed " + arguments
+            await ctx.channel.send(smashmsg)
+            await ctx.channel.send(gif)
+        else:
+            await ctx.channel.send("Really?")
             
 hateurself = [
     "Wow, you should see a therapist...",
