@@ -144,11 +144,10 @@ def get_gif(searchTerm):
     return gif['media_formats']['gif']['url']
 
 async def smash(ctx, *args):
-    whatkind = ["smash", "sex", "boner", "ass", "butt", "submissive", "domination",
-                "breed", "threesome", "foursome", "orgy", "hentai", "gay", "yaoi",
-                "lesbian", "hit", "hitting", "punch", "punching", "kick", "destroy",
-                "obliterate", "annihilate", "kill", "unalive", "dead", "grave", "kiss",
-                "lick", "touch", "throw", "anger", "angry", "knife", "stab"]
+    whatkind = ["smash", "smashing", "sex", "boner", "ass", "butt",
+                "orgy", "hentai", "gay", "yaoi", "yuri",
+                "lesbian", "hitting", "punching", "kick",
+                "kiss", "lick", "touch", "throw", "anger"]
     gif = get_gif(random.choice(whatkind))
 
     if len(ctx.message.mentions) == 1:
