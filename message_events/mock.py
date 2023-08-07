@@ -13,6 +13,9 @@ async def wys(message):
     if " crazy " in message.content.lower() or "crazy " in message.content.lower() or " crazy" in message.content.lower() or message.content == "crazy":
         await message.channel.send("Crazy? I was crazy once. They locked me in a room, a rubber room... a rubber room with rats... and rats make me crazy.", reference=message)
 
+    if " gay " in message.content.lower() or "gay " in message.content.lower() or " gay" in message.content.lower() or message.content == "gay":
+        await message.channel.send("Gay? I was gay once. They locked me in a room, a rainbow room... a rainbow room with person kissers... and person kissers make me gay.", reference=message)
+
 async def reply3(message):
     global replyusers
     global msg
