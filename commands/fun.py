@@ -3,6 +3,38 @@ from wordhoard import Definitions
 import requests
 import json
 
+def get_gif(searchTerm):  
+    f = open('./json/TOKENS.json')
+    Tokens = json.load(f)
+    f.close()
+
+    response = requests.get(f"https://g.tenor.com/v2/search?q={searchTerm}&key={Tokens['tenorapi']}&client_key=Levia&limit=50")
+    data = response.json()
+        
+    gif = random.choice(data["results"])
+    return gif['media_formats']['gif']['url']
+
+async def jail(ctx):
+    ref = ctx.message.reference
+
+    if ref:
+        refmsg = await ctx.fetch_message(ref.message_id)
+        refauthor = refmsg.author
+
+        if (refauthor.id == ctx.message.author.id):
+            await ctx.send("You can't jail yourself, silly!", reference=ctx.message)
+            return
+        
+        if (refauthor.bot):
+            await ctx.send("Bots don't do jailtime, that's for stupid humans, like you, that just tried to jail a bot.", reference=ctx.message)
+            return
+        
+        await ctx.message.delete()
+        await ctx.send(f"{refauthor.mention} is now in jail for **{random.randint(1, 76)} months** for saying **{refmsg.content}**.\nCrime reported by {ctx.author.mention}.")
+        await ctx.send(get_gif("jail"))
+    else:
+        await ctx.send("Hm?", reference=ctx.message)
+
 async def mock(ctx, *args):
     if len(args) < 1:
         await ctx.send("Mock what? lol")
@@ -131,17 +163,6 @@ async def love(ctx, *args):
             await ctx.channel.send(lovemsg)
         else:
             await ctx.channel.send("Are you that lonely?")
-
-def get_gif(searchTerm):  
-    f = open('./json/TOKENS.json')
-    Tokens = json.load(f)
-    f.close()
-
-    response = requests.get(f"https://g.tenor.com/v2/search?q={searchTerm}&key={Tokens['tenorapi']}&client_key=Levia&limit=50")
-    data = response.json()
-        
-    gif = random.choice(data["results"])
-    return gif['media_formats']['gif']['url']
 
 async def smash(ctx, *args):
     whatkind = ["smash", "smashing", "sex", "boner", "ass", "butt",

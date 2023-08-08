@@ -294,6 +294,10 @@ import commands.fun
              aliases = ["pula"])
 async def penis(ctx):
     asyncio.get_event_loop().create_task(commands.fun.penis(ctx))
+
+@bot.command(brief = "Jail someone for saying something illegal")
+async def jail(ctx):
+    asyncio.get_event_loop().create_task(commands.fun.jail(ctx))
     
 @bot.command(brief = "Let's see how dilated you are",
              aliases = ["pusay", "pizda"])
