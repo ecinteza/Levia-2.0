@@ -29,6 +29,10 @@ async def jail(ctx):
             await ctx.send("Bots don't do jailtime, that's for stupid humans, like you, that just tried to jail a bot.", reference=ctx.message)
             return
         
+        if (refmsg.content == ""):
+            await ctx.send("You can't jail someone for not saying anything, stupid.", reference=ctx.message)
+            return
+        
         await ctx.message.delete()
         await ctx.send(f"{refauthor.mention} is now in jail for **{random.randint(1, 76)} months** for saying **{refmsg.content}**.\nCrime reported by {ctx.author.mention}.")
         await ctx.send(get_gif("jail"))
