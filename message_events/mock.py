@@ -35,21 +35,29 @@ async def reply3(message):
         replyusers.clear()
         replyusers.append(message.author.id)
         
-async def mocking(message):
+async def mocking(message, mockguaranteed):
     if message.channel.id == 1089635395278475295: return
     if detect_link(message) == True: return
     
-    
-    mock = random.randint(1, 200)
-
-    mockmsg = ""
-    if mock==1:
+    if mockguaranteed:
+        mockmsg = ""
         for i in range(0, len(message.content)):
             if i%2==0:
                 mockmsg += message.content[i].upper()
             else:
                 mockmsg += message.content[i].lower()
         await message.channel.send(mockmsg)
+    else:
+        mock = random.randint(1, 200)
+
+        mockmsg = ""
+        if mock==1:
+            for i in range(0, len(message.content)):
+                if i%2==0:
+                    mockmsg += message.content[i].upper()
+                else:
+                    mockmsg += message.content[i].lower()
+            await message.channel.send(mockmsg)
         
 
 async def idk(ctx, *args):

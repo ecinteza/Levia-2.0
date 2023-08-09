@@ -96,6 +96,8 @@ import message_events.cazino
 import message_events.makemoney
 ##################################
 
+mockguaranteed = False
+
 @bot.event
 async def on_ready():
     if bot.user.id == 413335791272460288:
@@ -158,6 +160,8 @@ async def on_message_delete(message):
                       
 @bot.event  
 async def on_message(message):
+    global mockguaranteed
+
     if message.author.bot or len(message.content) == 0:
         return
 
@@ -179,7 +183,7 @@ async def on_message(message):
     if message.content.lower() == "im bacc":
         await message.channel.send("better than ever", reference=message)
     
-    asyncio.get_event_loop().create_task(message_events.mock.mocking(message))
+    asyncio.get_event_loop().create_task(message_events.mock.mocking(message, mockguaranteed))
     asyncio.get_event_loop().create_task(message_events.mock.reply3(message))
     asyncio.get_event_loop().create_task(message_events.wordle.msg_wordle(message))
     asyncio.get_event_loop().create_task(message_events.mock.wys(message))
@@ -408,6 +412,23 @@ async def ticket(ctx, *args):
 @bot.command(brief = "Give Levicoins [ADMIN ONLY]")
 async def givemoney(ctx, *args):
     asyncio.get_event_loop().create_task(commands.admin.givemoney(ctx, cursor, *args))
+
+@bot.command(brief = "Get that mocking started [ADMIN ONLY]")
+async def mockery(ctx):
+    global mockguaranteed
+
+    if (ctx.message.author.id != 255432828668477441):
+        await ctx.channel.send("You're not my dad", reference=ctx.message)
+        return
+    
+    if mockguaranteed == False:
+        mockguaranteed = True
+        await ctx.channel.send("Hands up! This is a mockery!")
+        await ctx.message.delete()
+    else:
+        mockguaranteed = False
+        await ctx.channel.send("Ok bye")
+        await ctx.message.delete()
     
 with open('./json/TOKENS.json') as f:
         data = json.load(f)
