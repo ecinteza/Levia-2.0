@@ -109,7 +109,7 @@ async def on_member_join(member):
     role = member.guild.get_role(486508485844926475)
     await member.add_roles(role)
     embed = discord.Embed(title = "Member joined",
-                          description = f"{member.name}#{member.discriminator } ({member.id})",
+                          description = f"{member.name} ({member.id})",
                           color = discord.Color.brand_green())
     embed.set_footer(text=datetime.now().strftime("%Y-%m-%d %H:%M"))
     
@@ -119,14 +119,14 @@ async def on_member_join(member):
 @bot.event
 async def on_member_remove(member):
     embed = discord.Embed(title = "Member left",
-                          description = f"{member.name}#{member.discriminator } ({member.id})",
+                          description = f"{member.name} ({member.id})",
                           color = discord.Color.dark_red())
     embed.set_footer(text=datetime.now().strftime("%Y-%m-%d %H:%M"))
     
     Logchannel = bot.get_channel(484331277164740620)
     await Logchannel.send(embed=embed)
     Logchannel = bot.get_channel(719961466509328406)
-    await Logchannel.send(f"**{member.name}#{member.discriminator}** left us...")
+    await Logchannel.send(f"**{member.name}** left us...")
     
 @bot.event
 async def on_message_edit(before, after):
@@ -136,7 +136,7 @@ async def on_message_edit(before, after):
     embed = discord.Embed(title = f"Message edited in #{before.channel.name} ({before.id})",
                           description = f"Before: **{before.content}** \n\nAfter: **{after.content}**",
                           color = discord.Color.blurple())
-    embed.set_footer(text=f"{before.author.name}#{before.author.discriminator } ({before.author.id}) | {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    embed.set_footer(text=f"{before.author.name} ({before.author.id}) | {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     
     Logchannel = bot.get_channel(484331277164740620)
     await Logchannel.send(embed=embed)
@@ -150,7 +150,7 @@ async def on_message_delete(message):
     embed = discord.Embed(title = f"Message deleted in #{message.channel.name} ({message.id})",
                           description = f"**{message.content}**",
                           color = discord.Color.blurple())
-    embed.set_footer(text=f"{message.author.name}#{message.author.discriminator } ({message.author.id}) | {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    embed.set_footer(text=f"{message.author.name} ({message.author.id}) | {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     
     Logchannel = bot.get_channel(484331277164740620)
     await Logchannel.send(embed=embed)

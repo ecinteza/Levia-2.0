@@ -141,6 +141,7 @@ loveurself = [
 ]
 
 async def love(ctx, *args):
+    gif = ""
     if len(ctx.message.mentions) == 1:
         mentioned = ctx.message.mentions[0]
         if str(mentioned.id) != '413335791272460288':
@@ -149,6 +150,10 @@ async def love(ctx, *args):
             else:
                 love = random.randint(0, 100)
                 lovemsg = ctx.author.name + " & " + mentioned.name + " > " + str(love) + "% ❤️"
+                if (love > 50):
+                    gif = get_gif("love")
+                else:
+                    gif = get_gif("hate")
                 await ctx.channel.send(lovemsg)
         else:
             await ctx.channel.send("I only love k4tz losers.")
@@ -158,15 +163,25 @@ async def love(ctx, *args):
         
         love = random.randint(0, 100)
         lovemsg = mentioned.name + " & " + mentioned_inlove.name + " > " + str(love) + "% ❤️"
+        if (love > 50):
+            gif = get_gif("love")
+        else:
+            gif = get_gif("hate")
         await ctx.channel.send(lovemsg)
     else:
         if len(args) > 0:
             arguments = " ".join(args)
             love = random.randint(0, 100)
             lovemsg = ctx.author.name + " & " + arguments + " > " + str(love) + "% ❤️"
+            if (love > 50):
+                gif = get_gif("love")
+            else:
+                gif = get_gif("hate")
             await ctx.channel.send(lovemsg)
         else:
             await ctx.channel.send("Are you that lonely?")
+            gif = get_gif("lonely")
+    await ctx.channel.send(gif)
 
 async def smash(ctx, *args):
     whatkind = ["smash", "smashing", "sex", "boner", "ass", "butt",
@@ -208,6 +223,7 @@ hateurself = [
     "Why would you hate yourself?"
 ]
 async def hate(ctx, *args):
+    gif = ""
     if len(ctx.message.mentions) == 1:
         mentioned = ctx.message.mentions[0]
         if str(mentioned.id) != '413335791272460288':
@@ -216,6 +232,10 @@ async def hate(ctx, *args):
             else:
                 hate = random.randint(0, 100)
                 hatemsg = ctx.author.name + " & " + mentioned.name + " > " + str(hate) + "% 💔"
+                if (hate > 50):
+                    gif = get_gif("hate")
+                else:
+                    gif = get_gif("friend")
                 await ctx.channel.send(hatemsg)
         else:
             await ctx.channel.send("I hate you very much, yes.")
@@ -225,15 +245,25 @@ async def hate(ctx, *args):
         
         hate = random.randint(0, 100)
         hatemsg = mentioned.name + " & " + mentioned_inhate.name + " > " + str(hate) + "% 💔"
+        if (hate > 50):
+            gif = get_gif("hate")
+        else:
+            gif = get_gif("friend")
         await ctx.channel.send(hatemsg)
     else:
         if len(args) > 0:
             arguments = " ".join(args)
             hate = random.randint(0, 100)
             hatemsg = ctx.author.name + " & " + arguments + " > " + str(hate) + "% 💔"
+            if (hate > 50):
+                gif = get_gif("hate")
+            else:
+                gif = get_gif("friend")
             await ctx.channel.send(hatemsg)
         else:
             await ctx.channel.send("Hm?")
+            gif = get_gif("stupid")
+    await ctx.channel.send(gif)
             
 async def dict(ctx, *args):
     try:
