@@ -167,11 +167,6 @@ async def on_message(message):
 
     asyncio.get_event_loop().create_task(message_events.makemoney.makemoney(message, bot, cursor))
     
-    role = discord.utils.get(message.guild.roles, id=579691573135147020)
-    if role not in message.author.roles and detect_link(message) == True:
-        await message.delete()
-        return
-    
     # PROCESS COMMANDS
     if message.content.startswith(prefix):
         process = message.content.split(" ")[0].lower()
@@ -182,6 +177,8 @@ async def on_message(message):
     
     if message.content.lower() == "im bacc":
         await message.channel.send("better than ever", reference=message)
+    
+    asyncio.get_event_loop().create_task(message_events.mock.filter(message))
     
     asyncio.get_event_loop().create_task(message_events.mock.mocking(message, mockguaranteed))
     asyncio.get_event_loop().create_task(message_events.mock.reply3(message))

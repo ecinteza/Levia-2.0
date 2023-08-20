@@ -1,10 +1,38 @@
 import random
 from commands.utils import remove_mentions, detect_link
+import discord
 # ignoring warning because it actually works
 
 replyusers = []
 msg = "NULL"
 msgtogoogle = "NULL"
+
+spamfilter = 0
+spamperson = 0
+getattention = 0
+
+async def filter(message):
+    global spamfilter
+    global spamperson
+    global getattention
+
+    role = discord.utils.get(message.guild.roles, id=579691573135147020)
+
+    if role not in message.author.roles and detect_link(message) == True:
+        await message.delete()
+    
+    if message.author.id != spamperson:
+        global spamfilter
+        spamfilter = 0
+        spamperson = message.author.id
+    else:
+        spamfilter += 1
+        if role not in message.author.roles and spamfilter > 5:
+            await message.delete()
+            getattention += 1
+            if getattention > 3:
+                await message.channel.send(f"<@{message.author.id}> STOP SPAMMING")
+                getattention = 0
 
 async def wys(message):
     if " 727 " in message.content.lower() or "727 " in message.content.lower() or " 727" in message.content.lower() or message.content == "727":
