@@ -101,7 +101,7 @@ mockguaranteed = False
 @bot.event
 async def on_ready():
     if bot.user.id == 413335791272460288:
-        await bot.get_channel(719961466509328406).send("im bacc")
+#        await bot.get_channel(719961466509328406).send("im bacc")
         asyncio.get_event_loop().create_task(periodicReloadDB())
 
 @bot.event
@@ -301,7 +301,7 @@ async def jail(ctx):
     asyncio.get_event_loop().create_task(commands.fun.jail(ctx))
     
 @bot.command(brief = "Let's see how dilated you are",
-             aliases = ["pusay", "pizda"])
+             aliases = ["pusay", "pizda", "pisda", "pista"])
 async def pussy(ctx):
     asyncio.get_event_loop().create_task(commands.fun.pussy(ctx))
     

@@ -1,10 +1,42 @@
 import random
 
-guaranteedWin = random.randint(10, 30)
+guaranteedWin = random.randint(25, 50)
 untilGuaranteed = 0
-fruits = ['🍎', '🍊', '🍋',
-          '🍌', '🍓', '🍒',
-          '🍑', '🍍', '🥥']
+fruits = ['🍏', '🍎', '🍐', '🍊', '🍋',
+          '🍌', '🍉', '🍇', '🫐', '🍅',
+          '🥝', '🥥', '🍍', '🥭', '🍑',
+          '🍒', '🍈', '🍓', '🌶️', '🌽',
+          '⭐', '🍆', '🥑', '🥦', '🥬']
+
+def find_duplicates(lst):
+    multiplier = 0
+    count_dict = {}
+    
+    for item in lst:
+        if item in count_dict:
+            count_dict[item] += 1
+        else:
+            count_dict[item] = 1
+
+        if item == '⭐':
+            multiplier += 1
+
+    duplicates = []
+    
+    for item, count in count_dict.items():
+        if count > 1:
+            duplicates.append((item, count))
+
+    for item in count_dict:
+        if count_dict[item] == 2:
+            multiplier += 2
+        elif count_dict[item] == 3:
+            multiplier += 5
+        elif count_dict[item] == 5:
+            multiplier += 10
+            break
+    
+    return multiplier
 
 async def slots(ctx, betmoney, cursor):
 
@@ -33,23 +65,21 @@ async def slots(ctx, betmoney, cursor):
     
         slots = []
         if untilGuaranteed < guaranteedWin:
-            for i in range(3):
+            for i in range(5):
                 slots.append(random.choice(fruits))
         else:
             untilGuaranteed = 0
             fru = random.choice(fruits)
-            for i in range(3):
+            for i in range(5):
                 slots.append(fru)
             
-        if slots[0] == slots[1] and slots[1] == slots[2]:
-            await ctx.send(f"🎰: {' '.join(slots)}\n**Congratulations (x10)**", reference=ctx.message)
-            guaranteedWin = random.randint(10, 30)
-            untilGuaranteed = 0
-            cursor.execute(f"UPDATE users SET coins = {coins+int(betmoney)*10} WHERE id = {ctx.author.id}")
-        elif slots[0] == slots[1] or slots[1] == slots[2] or slots[0] == slots[2]:
-            await ctx.send(f"🎰: {' '.join(slots)}\n**You were so close (x2)**", reference=ctx.message)
-            cursor.execute(f"UPDATE users SET coins = {coins+int(betmoney)*2} WHERE id = {ctx.author.id}")
+        multiplier = find_duplicates(slots)
+
+        if multiplier == 0:
+            await ctx.send(f"🎰: {' '.join(slots)}\n**No win**", reference=ctx.message)
+            return
         else:
-            await ctx.send(f"🎰: {' '.join(slots)}\n**Maybe next time (LOSS)**", reference=ctx.message)
+            await ctx.send(f"🎰: {' '.join(slots)}\n**Win (x{multiplier})**", reference=ctx.message)
+            cursor.execute(f"UPDATE users SET coins = {coins+(int(betmoney)*multiplier)} WHERE id = {ctx.author.id}")
     except Exception as e:
         await ctx.send(f"Error occured. ```{e}```")
